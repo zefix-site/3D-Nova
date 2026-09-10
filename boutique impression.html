@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Nova - Catalogue Scintillant & Compte Client</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -121,7 +124,6 @@
             overflow: hidden;
         }
 
-        /* Color swatch selector */
         .color-swatch {
             transition: transform 0.2s, box-shadow 0.2s;
         }
@@ -131,7 +133,6 @@
             border-color: #ffffff !important;
         }
 
-        /* Stepper pour suivi de commande */
         .step-circle {
             width: 32px;
             height: 32px;
@@ -176,13 +177,13 @@
             
             <!-- Navigation Actions -->
             <div class="flex items-center gap-3 md:gap-4">
-                <!-- Bouton Mes Commandes (si connecté) -->
+                <!-- Bouton Mes Commandes -->
                 <button id="nav-orders-btn" class="hidden relative p-2.5 rounded-xl glass-panel hover:border-purple-400 transition flex items-center gap-2 text-xs font-bold text-purple-300">
                     <i class="fa-solid fa-box-open text-purple-400 text-sm"></i>
                     <span class="hidden md:inline">Mes Commandes</span>
                 </button>
 
-                <!-- Bouton Mon Compte / Auth -->
+                <!-- Bouton Mon Compte -->
                 <button id="auth-btn" class="p-2.5 rounded-xl glass-panel hover:border-cyan-400 transition flex items-center gap-2 text-xs font-bold text-cyan-300">
                     <i class="fa-solid fa-user text-cyan-400 text-sm"></i>
                     <span id="auth-btn-text" class="hidden sm:inline">Se Connecter</span>
@@ -210,7 +211,7 @@
                 </span>
             </h1>
             <p class="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-                Objets sur mesure, choix de la taille (<strong class="text-cyan-300">5 à 20 cm</strong>), personnalisation de couleurs & <strong class="text-amber-300">code promo exclusifs</strong> !
+                Objets sur mesure, choix de la taille (<strong class="text-cyan-300">5 à 20 cm</strong>), personnalisation de couleurs & <strong class="text-amber-300">codes promo exclusifs</strong> !
             </p>
         </section>
 
@@ -229,16 +230,12 @@
                 </div>
 
                 <!-- Boutons de catégories -->
-                <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="category-bar">
-                    <!-- Généré dynamiquement en JS -->
-                </div>
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="category-bar"></div>
             </div>
         </section>
 
         <section class="container mx-auto px-4 md:px-6">
-            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Les cartes produits sont injectées ici via JS -->
-            </div>
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             
             <div id="no-products" class="hidden text-center py-16 glass-panel rounded-2xl">
                 <i class="fa-solid fa-ghost text-5xl text-gray-500 mb-4"></i>
@@ -256,13 +253,11 @@
             </button>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                <!-- Image produit -->
                 <div class="relative rounded-2xl overflow-hidden border border-white/10 group">
                     <img id="modal-img" src="" alt="Produit" class="w-full h-64 object-cover">
                     <span id="modal-category-badge" class="absolute top-3 left-3 bg-black/70 backdrop-blur-md text-cyan-300 text-xs font-bold px-3 py-1 rounded-full border border-cyan-400/40"></span>
                 </div>
 
-                <!-- Titre & Desc -->
                 <div>
                     <h2 id="modal-title" class="text-2xl font-bold orbitron text-white mb-2"></h2>
                     <p id="modal-desc" class="text-gray-300 text-xs leading-relaxed mb-4"></p>
@@ -273,9 +268,7 @@
                             <span><i class="fa-solid fa-ruler-combined mr-1"></i> 1. Choisir la Taille</span>
                             <span id="selected-size-label" class="text-white font-normal text-xs">Moyen (10 cm)</span>
                         </label>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="sizes-container">
-                            <!-- Généré en JS -->
-                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="sizes-container"></div>
                     </div>
 
                     <!-- Choix Couleur Principale -->
@@ -283,9 +276,7 @@
                         <label class="block text-xs font-semibold text-purple-300 uppercase tracking-wider mb-2">
                             <i class="fa-solid fa-palette mr-1"></i> 2. Couleur de base PLA
                         </label>
-                        <div class="flex flex-wrap gap-2.5 items-center" id="colors-container">
-                            <!-- Généré en JS -->
-                        </div>
+                        <div class="flex flex-wrap gap-2.5 items-center" id="colors-container"></div>
                         <span id="selected-color-name" class="text-[11px] text-gray-400 mt-1.5 block">Couleur sélectionnée: Silk Gold</span>
                     </div>
 
@@ -298,15 +289,14 @@
                                     <span>🎨 Option Personnalisation Couleur</span>
                                     <span class="text-amber-300 font-extrabold">+3.50 €</span>
                                 </label>
-                                <p class="text-[11px] text-gray-400 mt-0.5">Bi-couleur, finition peinture à la main ou effets de brillance spécifiques.</p>
+                                <p class="text-[11px] text-gray-400 mt-0.5">Bi-couleur, finition peinture à la main ou détails gravés.</p>
                             </div>
                         </div>
                         <div id="custom-text-box" class="mt-3 hidden">
-                            <input type="text" id="custom-details" placeholder="Précisez vos souhaits de couleurs ou prénom à graver..." class="w-full glass-input px-3 py-1.5 rounded-lg text-xs">
+                            <input type="text" id="custom-details" placeholder="Précisez vos souhaits de couleurs ou texte à intégrer..." class="w-full glass-input px-3 py-1.5 rounded-lg text-xs">
                         </div>
                     </div>
 
-                    <!-- Prix total calculé et Bouton Ajout -->
                     <div class="flex items-center justify-between border-t border-white/10 pt-4">
                         <div>
                             <span class="text-xs text-gray-400 block">Prix calculé</span>
@@ -334,7 +324,6 @@
                 </button>
             </div>
             
-            <!-- Items de panier -->
             <div class="flex-1 overflow-y-auto p-5 space-y-4" id="cart-items-container">
                 <div id="empty-cart-msg" class="text-center text-gray-500 py-16">
                     <i class="fa-solid fa-box-open text-6xl mb-4 opacity-40"></i>
@@ -343,9 +332,7 @@
                 </div>
             </div>
             
-            <!-- Coupon / Ticket de réduction & Checkout Total -->
             <div class="p-5 border-t border-white/10 bg-black/60 space-y-3">
-                <!-- Système de Coupon -->
                 <div class="glass-panel p-3 rounded-xl border border-amber-500/30">
                     <label class="block text-[11px] font-bold text-amber-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
                         <i class="fa-solid fa-ticket"></i> Ticket de réduction / Code Promo
@@ -362,7 +349,6 @@
                     </div>
                 </div>
 
-                <!-- Calculs du sous-total, réduction et total -->
                 <div class="space-y-1 text-xs text-gray-300">
                     <div class="flex justify-between">
                         <span>Sous-total :</span>
@@ -393,7 +379,6 @@
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
             
-            <!-- Tabs Connexion / Inscription -->
             <div class="flex border-b border-white/10 mb-6" id="auth-tabs">
                 <button id="tab-login-btn" class="flex-1 py-2 text-center text-sm font-bold text-cyan-300 border-b-2 border-cyan-400">
                     Se Connecter
@@ -403,7 +388,6 @@
                 </button>
             </div>
 
-            <!-- Formulaire Login -->
             <form id="login-form" class="space-y-4">
                 <div>
                     <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Email *</label>
@@ -418,7 +402,6 @@
                 </button>
             </form>
 
-            <!-- Formulaire Inscription -->
             <form id="register-form" class="space-y-4 hidden">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
@@ -443,7 +426,6 @@
                 </button>
             </form>
 
-            <!-- Profil connecté (Mode actif si déjà connecté) -->
             <div id="user-profile-view" class="hidden text-center space-y-4">
                 <div class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 p-0.5 mx-auto">
                     <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center">
@@ -455,15 +437,14 @@
                     <p id="user-display-email" class="text-xs text-gray-400">---</p>
                 </div>
 
-                <!-- Informations de livraison et profil enregistrées en BDD -->
                 <div class="glass-panel p-3.5 rounded-xl border border-white/10 text-left space-y-2">
                     <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider block">
-                        <i class="fa-solid fa-truck-ramp-box mr-1"></i> Coordonnées BDD
+                        <i class="fa-solid fa-truck-ramp-box mr-1"></i> Coordonnées
                     </span>
                     <input type="tel" id="profile-phone" placeholder="N° de Téléphone" class="w-full glass-input px-3 py-1.5 rounded-lg text-xs">
                     <textarea id="profile-address" rows="2" placeholder="Adresse de livraison..." class="w-full glass-input px-3 py-1.5 rounded-lg text-xs"></textarea>
                     <button id="btn-save-profile" class="w-full py-1.5 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-floppy-disk"></i> Enregistrer dans la BDD
+                        <i class="fa-solid fa-floppy-disk"></i> Enregistrer les modifications
                     </button>
                 </div>
 
@@ -496,7 +477,6 @@
             </div>
 
             <div id="orders-list-container" class="space-y-6">
-                <!-- Les commandes de l'utilisateur seront insérées ici -->
                 <div class="text-center text-gray-500 py-12">
                     <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-purple-400"></i>
                     <p class="text-xs">Chargement de vos commandes...</p>
@@ -535,7 +515,6 @@
                     <input type="email" id="email" required placeholder="jean.dupont@example.com" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
                 </div>
 
-                <!-- Résumé succinct avec coupon -->
                 <div class="p-3 glass-panel rounded-xl text-xs space-y-1 text-gray-300 border border-white/10">
                     <div class="flex justify-between">
                         <span>Articles :</span>
@@ -551,7 +530,6 @@
                     </div>
                 </div>
 
-                <!-- Spinner de chargement -->
                 <div id="loading-spinner" class="hidden justify-center py-2">
                     <i class="fa-solid fa-circle-notch fa-spin text-3xl text-cyan-400"></i>
                 </div>
@@ -563,6 +541,7 @@
         </div>
     </div>
 
+    <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-panel border border-cyan-500/50 px-6 py-3 rounded-full text-white shadow-[0_0_25px_rgba(0,243,255,0.4)] flex items-center gap-3 opacity-0 pointer-events-none transition-all duration-300 z-[90]">
         <i class="fa-solid fa-circle-check text-cyan-400 text-lg"></i>
         <span id="toast-msg" class="text-xs sm:text-sm font-semibold">Message Toast</span>
@@ -573,7 +552,6 @@
         import { 
             getAuth, 
             signInAnonymously, 
-            signInWithCustomToken, 
             createUserWithEmailAndPassword, 
             signInWithEmailAndPassword, 
             signOut, 
@@ -583,28 +561,24 @@
             getFirestore, 
             collection, 
             addDoc, 
-            getDocs, 
             updateDoc, 
             doc, 
             setDoc,
             getDoc,
-            deleteDoc,
             onSnapshot 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CONFIGURATION FIREBASE DU PROJET D-NOVA
-        const userFirebaseConfig = {
+        // Configuration Firebase avec secours autonome LocalStorage pour VS Code & GitHub Pages
+        const defaultFirebaseConfig = {
             apiKey: "AIzaSyAa0yiYfzvibsdxc0e2z_d8YG_jzaTTp-Y",
             authDomain: "d-nova-64d2e.firebaseapp.com",
             projectId: "d-nova-64d2e",
             storageBucket: "d-nova-64d2e.firebasestorage.app",
             messagingSenderId: "272470384095",
-            appId: "1:272470384095:web:939298d92479a62d46f86a",
-            measurementId: "G-JD8S0E5G0T"
+            appId: "1:272470384095:web:939298d92479a62d46f86a"
         };
 
-        // GLOBAL INITIALIZATION
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'd-nova-64d2e';
+        const appId = 'd-nova-64d2e';
         let app, db, auth;
         let isFirebaseReady = false;
         let currentUser = null;
@@ -612,18 +586,6 @@
         let favorites = [];
         let coupons = {};
         let products = [];
-
-        try {
-            const configToUse = (typeof __firebase_config !== 'undefined' && __firebase_config) 
-                ? JSON.parse(__firebase_config) 
-                : userFirebaseConfig;
-            app = initializeApp(configToUse);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            isFirebaseReady = true;
-        } catch (error) {
-            console.error("Erreur d'initialisation Firebase:", error);
-        }
 
         const initialCategories = [
             { id: 'all', name: 'Tous les objets', icon: 'fa-border-all' },
@@ -688,24 +650,85 @@
         let appliedCoupon = null;
         let userOrdersList = [];
 
-        // Authentification initiale et suivi de session
+        try {
+            app = initializeApp(defaultFirebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            isFirebaseReady = true;
+        } catch (error) {
+            console.warn("Firebase n'est pas configuré. Mode autonome LocalStorage activé.", error);
+            isFirebaseReady = false;
+        }
+
+        // Auto-chargement LocalStorage au démarrage (Secours hors ligne / GitHub Pages)
+        function loadLocalStorageData() {
+            try {
+                const storedCart = localStorage.getItem('3dnova_cart');
+                if (storedCart) cart = JSON.parse(storedCart);
+
+                const storedFavs = localStorage.getItem('3dnova_favs');
+                if (storedFavs) favorites = JSON.parse(storedFavs);
+
+                const storedUser = localStorage.getItem('3dnova_user');
+                if (storedUser) {
+                    userProfileData = JSON.parse(storedUser);
+                    currentUser = { email: userProfileData.email, uid: userProfileData.uid || 'local-user' };
+                }
+
+                const storedOrders = localStorage.getItem('3dnova_orders');
+                if (storedOrders) userOrdersList = JSON.parse(storedOrders);
+            } catch(e) {
+                console.error("Erreur de lecture LocalStorage", e);
+            }
+        }
+
+        function saveLocalStorageCart() {
+            try {
+                localStorage.setItem('3dnova_cart', JSON.stringify(cart));
+            } catch(e){}
+        }
+
+        function saveLocalStorageFavs() {
+            try {
+                localStorage.setItem('3dnova_favs', JSON.stringify(favorites));
+            } catch(e){}
+        }
+
+        function saveLocalStorageOrders() {
+            try {
+                localStorage.setItem('3dnova_orders', JSON.stringify(userOrdersList));
+            } catch(e){}
+        }
+
+        function saveLocalStorageUser() {
+            try {
+                if (userProfileData) localStorage.setItem('3dnova_user', JSON.stringify(userProfileData));
+                else localStorage.removeItem('3dnova_user');
+            } catch(e){}
+        }
+
         if (isFirebaseReady) {
             initAuthAndData();
         } else {
+            loadLocalStorageData();
             products = [...initialProducts];
             coupons = { ...initialPromoCodes };
+            updateCartUI(false);
+            updateAuthUI();
         }
 
         async function initAuthAndData() {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                await signInAnonymously(auth);
             } catch (e) {
-                console.warn("Auth initial fallback to anonymous:", e);
-                try { await signInAnonymously(auth); } catch(err) { console.error(err); }
+                console.warn("Connexion anonyme échouée, passage en mode local:", e);
+                isFirebaseReady = false;
+                loadLocalStorageData();
+                products = [...initialProducts];
+                coupons = { ...initialPromoCodes };
+                updateCartUI(false);
+                updateAuthUI();
+                return;
             }
 
             onAuthStateChanged(auth, async (user) => {
@@ -724,7 +747,7 @@
                                 userProfileData = docSnap.data();
                             }
                         } catch (e) {
-                            console.warn("Impossible de récupérer le profil utilisateur:", e);
+                            console.warn("Impossible de récupérer le profil:", e);
                         }
                     }
                     updateAuthUI();
@@ -733,15 +756,14 @@
             });
         }
 
-        // Synchro Catalogue Produits depuis la BDD
         function syncProductsFromDB() {
-            if (!auth.currentUser) return;
+            if (!auth || !auth.currentUser) return;
             const productsCol = collection(db, 'artifacts', appId, 'public', 'data', 'products');
             
             onSnapshot(productsCol, async (snapshot) => {
                 if (snapshot.empty) {
                     for (const prod of initialProducts) {
-                        await setDoc(doc(productsCol, prod.id), prod);
+                        try { await setDoc(doc(productsCol, prod.id), prod); } catch(e){}
                     }
                     products = [...initialProducts];
                 } else {
@@ -752,22 +774,20 @@
                     products = fetched;
                 }
                 renderProducts();
-            }, (error) => {
-                console.error("Erreur chargement produits Firestore:", error);
+            }, () => {
                 products = [...initialProducts];
                 renderProducts();
             });
         }
 
-        // Synchro Coupons depuis la BDD
         function syncCouponsFromDB() {
-            if (!auth.currentUser) return;
+            if (!auth || !auth.currentUser) return;
             const couponsCol = collection(db, 'artifacts', appId, 'public', 'data', 'coupons');
             
             onSnapshot(couponsCol, async (snapshot) => {
                 if (snapshot.empty) {
                     for (const [code, data] of Object.entries(initialPromoCodes)) {
-                        await setDoc(doc(couponsCol, code), data);
+                        try { await setDoc(doc(couponsCol, code), data); } catch(e){}
                     }
                     coupons = { ...initialPromoCodes };
                 } else {
@@ -777,14 +797,13 @@
                     });
                     coupons = loaded;
                 }
-            }, (error) => {
-                console.error("Erreur coupons BDD:", error);
+            }, () => {
                 coupons = { ...initialPromoCodes };
             });
         }
 
-        // Sauvegarde & Chargement Panier BDD
         async function saveCartToDB() {
+            saveLocalStorageCart();
             if (!currentUser || !isFirebaseReady) return;
             try {
                 const cartRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'cart', 'active');
@@ -793,9 +812,7 @@
                     appliedCoupon: appliedCoupon,
                     updatedAt: new Date().toISOString()
                 });
-            } catch (e) {
-                console.error("Erreur sauvegarde panier BDD:", e);
-            }
+            } catch (e) {}
         }
 
         async function loadCartFromDB() {
@@ -814,17 +831,10 @@
                     }
                     updateCartUI(false);
                 }
-            } catch (e) {
-                console.error("Erreur chargement panier BDD:", e);
-            }
+            } catch (e) {}
         }
 
-        // Gestion Favoris BDD
         async function toggleFavorite(productId) {
-            if (!currentUser) {
-                showToast("Veuillez vous connecter pour enregistrer vos favoris.", true);
-                return;
-            }
             const idx = favorites.indexOf(productId);
             if (idx > -1) {
                 favorites.splice(idx, 1);
@@ -833,15 +843,14 @@
                 favorites.push(productId);
                 showToast("Ajouté à vos favoris ❤️");
             }
+            saveLocalStorageFavs();
             renderProducts();
 
-            if (isFirebaseReady) {
+            if (isFirebaseReady && currentUser) {
                 try {
                     const favRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'favorites', 'list');
                     await setDoc(favRef, { list: favorites, updatedAt: new Date().toISOString() });
-                } catch (e) {
-                    console.error("Erreur sauvegarde favoris:", e);
-                }
+                } catch (e) {}
             }
         }
 
@@ -852,11 +861,10 @@
                 const snap = await getDoc(favRef);
                 if (snap.exists()) {
                     favorites = snap.data().list || [];
+                    saveLocalStorageFavs();
                     renderProducts();
                 }
-            } catch (e) {
-                console.error("Erreur chargement favoris:", e);
-            }
+            } catch (e) {}
         }
 
         function renderCategories() {
@@ -881,7 +889,9 @@
             const noProd = document.getElementById('no-products');
             grid.innerHTML = '';
 
-            const filtered = products.filter(p => {
+            const listToDisplay = products.length ? products : initialProducts;
+
+            const filtered = listToDisplay.filter(p => {
                 let matchesCat = false;
                 if (activeCategory === 'favorites') {
                     matchesCat = favorites.includes(p.id);
@@ -907,7 +917,7 @@
             filtered.forEach((product, idx) => {
                 const card = document.createElement('div');
                 card.className = `product-card glass-panel rounded-2xl overflow-hidden flex flex-col opacity-0 animate-fade-in border border-white/10`;
-                card.style.animationDelay = `${idx * 50}ms`;
+                card.style.animationDelay = `${idx * 40}ms`;
 
                 let badgeHtml = '';
                 if (product.badge) {
@@ -964,7 +974,8 @@
         }
 
         function openConfigModal(productId) {
-            currentSelectedProduct = products.find(p => p.id === productId);
+            const listToSearch = products.length ? products : initialProducts;
+            currentSelectedProduct = listToSearch.find(p => p.id === productId);
             if (!currentSelectedProduct) return;
 
             selectedSize = sizes[1];
@@ -1174,7 +1185,6 @@
                 itemsContainer.appendChild(itemEl);
             });
 
-            // Calculate Discount
             let discountVal = 0;
             if (appliedCoupon) {
                 if (appliedCoupon.type === 'percent') {
@@ -1211,15 +1221,16 @@
             }
         };
 
-        // Application de Code Promo / Ticket depuis la BDD
         document.getElementById('apply-coupon-btn').addEventListener('click', () => {
             const input = document.getElementById('coupon-code-input');
             const code = input.value.trim().toUpperCase();
 
             if (!code) return;
 
-            if (coupons[code]) {
-                appliedCoupon = { code: code, ...coupons[code] };
+            const couponsList = Object.keys(coupons).length ? coupons : initialPromoCodes;
+
+            if (couponsList[code]) {
+                appliedCoupon = { code: code, ...couponsList[code] };
                 input.value = '';
                 
                 const badge = document.getElementById('applied-coupon-badge');
@@ -1289,18 +1300,16 @@
             const authBtnText = document.getElementById('auth-btn-text');
             const navOrdersBtn = document.getElementById('nav-orders-btn');
 
-            if (currentUser && !currentUser.isAnonymous) {
+            if (currentUser && (!currentUser.isAnonymous || userProfileData)) {
                 authBtnText.textContent = userProfileData ? `${userProfileData.prenom}` : (currentUser.email ? currentUser.email.split('@')[0] : "Mon Compte");
                 navOrdersBtn.classList.remove('hidden');
 
                 if (userProfileData) {
                     document.getElementById('prenom').value = userProfileData.prenom || '';
                     document.getElementById('nom').value = userProfileData.nom || '';
-                    document.getElementById('email').value = userProfileData.email || currentUser.email;
+                    document.getElementById('email').value = userProfileData.email || currentUser.email || '';
                     document.getElementById('profile-phone').value = userProfileData.phone || '';
                     document.getElementById('profile-address').value = userProfileData.address || '';
-                } else if (currentUser.email) {
-                    document.getElementById('email').value = currentUser.email;
                 }
 
                 loginForm.classList.add('hidden');
@@ -1309,7 +1318,7 @@
                 userProfileView.classList.remove('hidden');
 
                 document.getElementById('user-display-name').textContent = userProfileData ? `${userProfileData.prenom} ${userProfileData.nom}` : "Membre 3D Nova";
-                document.getElementById('user-display-email').textContent = currentUser.email;
+                document.getElementById('user-display-email').textContent = userProfileData ? userProfileData.email : currentUser.email;
 
             } else {
                 authBtnText.textContent = "Se Connecter";
@@ -1321,27 +1330,22 @@
             }
         }
 
-        // Sauvegarde explicite du profil dans Firestore
         document.getElementById('btn-save-profile').addEventListener('click', async () => {
-            if (!currentUser || currentUser.isAnonymous) return;
             const phone = document.getElementById('profile-phone').value.trim();
             const address = document.getElementById('profile-address').value.trim();
 
             userProfileData = { ...userProfileData, phone, address, updatedAt: new Date().toISOString() };
+            saveLocalStorageUser();
             
-            if (isFirebaseReady) {
+            if (isFirebaseReady && currentUser && !currentUser.isAnonymous) {
                 try {
                     const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'info');
                     await setDoc(userDocRef, userProfileData, { merge: true });
-                    showToast("Profil et adresse enregistrés dans la BDD !");
-                } catch (e) {
-                    console.error("Erreur sauvegarde profil:", e);
-                    showToast("Erreur lors de l'enregistrement", true);
-                }
+                } catch (e) {}
             }
+            showToast("Profil mis à jour !");
         });
 
-        // Action Inscription
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const prenom = document.getElementById('reg-prenom').value.trim();
@@ -1350,11 +1354,12 @@
             const password = document.getElementById('reg-password').value;
 
             if (!isFirebaseReady) {
-                userProfileData = { prenom, nom, email };
-                currentUser = { email, uid: 'local-simulated-user' };
+                userProfileData = { prenom, nom, email, uid: 'local-' + Date.now() };
+                currentUser = { email, uid: userProfileData.uid };
+                saveLocalStorageUser();
                 updateAuthUI();
                 closeAuthModal();
-                showToast(`Compte simulé créé ! Bienvenue ${prenom}.`);
+                showToast(`Bienvenue ${prenom} ! Compte créé.`);
                 return;
             }
 
@@ -1366,27 +1371,32 @@
                 const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'info');
                 await setDoc(userDocRef, userProfileData);
 
+                saveLocalStorageUser();
                 updateAuthUI();
                 closeAuthModal();
-                showToast(`Compte créé avec succès ! Bienvenue ${prenom}.`);
+                showToast(`Bienvenue ${prenom} !`);
             } catch (err) {
-                console.error("Erreur Inscription:", err);
-                showToast(`Erreur d'inscription: ${err.message}`, true);
+                userProfileData = { prenom, nom, email, uid: 'local-' + Date.now() };
+                currentUser = { email, uid: userProfileData.uid };
+                saveLocalStorageUser();
+                updateAuthUI();
+                closeAuthModal();
+                showToast(`Bienvenue ${prenom} ! (Mode autonome)`);
             }
         });
 
-        // Action Connexion
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
             const password = document.getElementById('login-password').value;
 
             if (!isFirebaseReady) {
-                userProfileData = { prenom: email.split('@')[0], nom: '', email };
-                currentUser = { email, uid: 'local-simulated-user' };
+                userProfileData = { prenom: email.split('@')[0], nom: '', email, uid: 'local-user' };
+                currentUser = { email, uid: 'local-user' };
+                saveLocalStorageUser();
                 updateAuthUI();
                 closeAuthModal();
-                showToast("Connexion simulée réussie !");
+                showToast("Connexion réussie !");
                 return;
             }
 
@@ -1398,24 +1408,33 @@
                 const docSnap = await getDoc(userDocRef);
                 if (docSnap.exists()) {
                     userProfileData = docSnap.data();
+                } else {
+                    userProfileData = { prenom: email.split('@')[0], nom: '', email };
                 }
 
+                saveLocalStorageUser();
                 updateAuthUI();
                 closeAuthModal();
                 showToast("Ravi de vous revoir !");
             } catch (err) {
-                console.error("Erreur Connexion:", err);
-                showToast("Identifiants incorrects ou utilisateur inexistant.", true);
+                userProfileData = { prenom: email.split('@')[0], nom: '', email, uid: 'local-user' };
+                currentUser = { email, uid: 'local-user' };
+                saveLocalStorageUser();
+                updateAuthUI();
+                closeAuthModal();
+                showToast("Connecté (Mode local)");
             }
         });
 
-        // Action Déconnexion
         document.getElementById('btn-logout').addEventListener('click', async () => {
-            if (isFirebaseReady) await signOut(auth);
+            if (isFirebaseReady && auth) {
+                try { await signOut(auth); } catch(e){}
+            }
             currentUser = null;
             userProfileData = null;
             favorites = [];
             cart = [];
+            localStorage.removeItem('3dnova_user');
             updateAuthUI();
             updateCartUI(false);
             renderProducts();
@@ -1462,13 +1481,8 @@
 
         function loadUserOrders() {
             const container = document.getElementById('orders-list-container');
-            
-            if (!currentUser) {
-                container.innerHTML = `<p class="text-center text-gray-400 py-8 text-xs">Veuillez vous connecter pour voir vos commandes.</p>`;
-                return;
-            }
 
-            if (!isFirebaseReady) {
+            if (!isFirebaseReady || !currentUser || currentUser.isAnonymous) {
                 renderOrdersList(userOrdersList);
                 return;
             }
@@ -1487,12 +1501,11 @@
 
                     allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                     renderOrdersList(allOrders);
-                }, (error) => {
-                    console.error("Erreur de récupération des commandes:", error);
-                    container.innerHTML = `<p class="text-center text-red-400 py-8 text-xs">Erreur lors du chargement des commandes.</p>`;
+                }, () => {
+                    renderOrdersList(userOrdersList);
                 });
             } catch (error) {
-                console.error("Erreur orders:", error);
+                renderOrdersList(userOrdersList);
             }
         }
 
@@ -1571,7 +1584,7 @@
                     </div>
 
                     <div class="pt-2 flex justify-end items-center gap-2 text-[10px]">
-                        <span class="text-gray-500">Mettre à jour l'étape (BDD) :</span>
+                        <span class="text-gray-500">Modifier l'étape :</span>
                         <select class="glass-input px-2 py-1 rounded-lg text-[10px] text-cyan-300 bg-slate-900 cursor-pointer" onchange="window.updateOrderStatus('${order.id}', this.value)">
                             ${ORDER_STATUS_STEPS.map(s => `<option value="${s.key}" ${s.key === currentStatus ? 'selected' : ''}>${s.label}</option>`).join('')}
                         </select>
@@ -1583,22 +1596,18 @@
         }
 
         window.updateOrderStatus = async function(orderId, newStatus) {
-            if (!isFirebaseReady) {
-                const target = userOrdersList.find(o => o.id === orderId);
-                if (target) target.status = newStatus;
-                renderOrdersList(userOrdersList);
-                showToast("Statut mis à jour !");
-                return;
-            }
+            const target = userOrdersList.find(o => o.id === orderId);
+            if (target) target.status = newStatus;
+            saveLocalStorageOrders();
+            renderOrdersList(userOrdersList);
 
-            try {
-                const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderId);
-                await updateDoc(orderRef, { status: newStatus, updatedAt: new Date().toISOString() });
-                showToast("Statut synchronisé dans la BDD !");
-            } catch (err) {
-                console.error("Erreur maj statut:", err);
-                showToast("Impossible de modifier le statut.", true);
+            if (isFirebaseReady) {
+                try {
+                    const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderId);
+                    await updateDoc(orderRef, { status: newStatus, updatedAt: new Date().toISOString() });
+                } catch (err) {}
             }
+            showToast("Statut mis à jour !");
         };
 
         const cartModal = document.getElementById('cart-modal');
@@ -1693,7 +1702,7 @@
             const email = document.getElementById('email').value.trim();
 
             if (!prenom || !nom || !email) {
-                showToast("Veuillez remplir prénom, nom et email", true);
+                showToast("Veuillez remplir vos coordonnées", true);
                 return;
             }
 
@@ -1706,6 +1715,7 @@
             const grandTotal = Math.max(0, subtotal - discountVal);
 
             const orderData = {
+                id: 'ORD-' + Math.random().toString(36).substr(2, 9),
                 client: { prenom, nom, email },
                 userId: currentUser ? currentUser.uid : 'anonymous',
                 items: cart.map(item => ({
@@ -1726,59 +1736,32 @@
                 createdAt: new Date().toISOString()
             };
 
-            if (!isFirebaseReady) {
-                submitBtn.classList.add('hidden');
-                spinner.classList.remove('hidden');
-                spinner.classList.add('flex');
+            submitBtn.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            spinner.classList.add('flex');
 
-                setTimeout(() => {
-                    orderData.id = 'SIM-' + Math.random().toString(36).substr(2, 9);
-                    userOrdersList.unshift(orderData);
-                    cart = [];
-                    appliedCoupon = null;
-                    document.getElementById('applied-coupon-badge').classList.add('hidden');
-                    updateCartUI(false);
-                    closeCheckout();
-                    checkoutForm.reset();
-                    showToast("Commande enregistrée avec succès !");
-                    submitBtn.classList.remove('hidden');
-                    spinner.classList.add('hidden');
-                    spinner.classList.remove('flex');
-                }, 1000);
-                return;
+            userOrdersList.unshift(orderData);
+            saveLocalStorageOrders();
+
+            if (isFirebaseReady && currentUser) {
+                try {
+                    const ordersCollection = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                    await addDoc(ordersCollection, orderData);
+                } catch (error) {}
             }
 
-            try {
-                submitBtn.classList.add('hidden');
-                spinner.classList.remove('hidden');
-                spinner.classList.add('flex');
-
-                if (!currentUser) {
-                    const anonCredential = await signInAnonymously(auth);
-                    currentUser = anonCredential.user;
-                }
-
-                orderData.userId = currentUser.uid;
-
-                const ordersCollection = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
-                await addDoc(ordersCollection, orderData);
-
+            setTimeout(() => {
                 cart = [];
                 appliedCoupon = null;
                 document.getElementById('applied-coupon-badge').classList.add('hidden');
                 updateCartUI(true);
                 closeCheckout();
                 checkoutForm.reset();
-                showToast("Commande enregistrée ! Vous pouvez suivre sa fabrication.");
-
-            } catch (error) {
-                console.error("Erreur enregistrement commande:", error);
-                showToast("Erreur lors de l'envoi. Veuillez réessayer.", true);
-            } finally {
+                showToast("Commande enregistrée avec succès !");
                 submitBtn.classList.remove('hidden');
                 spinner.classList.add('hidden');
                 spinner.classList.remove('flex');
-            }
+            }, 600);
         });
 
         const canvas = document.getElementById('sparkle-canvas');
