@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Nova - Catalogue Scintillant & Compte Client</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bc13fe;
+            --neon-gold: #ffd700;
+            --neon-green: #10b981;
+            --bg-dark: #050510;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            overflow-x: hidden;
+            margin: 0;
+        }
+        h1, h2, h3, .logo-text, .orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        /* Arrière-plan scintillant Canvas */
+        #sparkle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Panneaux Glassmorphism */
+        .glass-panel {
+            background: rgba(20, 20, 35, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+        }
+
+        .glass-input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            transition: all 0.25s ease;
+        }
+        .glass-input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+            outline: none;
+        }
+
+        /* Cartes produits et effets */
+        .product-card {
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 25px rgba(188, 19, 254, 0.35), inset 0 0 10px rgba(188, 19, 254, 0.15);
+        }
+
+        .btn-neon {
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.35);
+        }
+        .btn-neon:hover {
+            box-shadow: 0 0 25px rgba(188, 19, 254, 0.7);
+            transform: scale(1.02);
+        }
+
+        .btn-category {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .btn-category.active, .btn-category:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0, 243, 255, 0.15);
+            color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050510; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--neon-purple), var(--neon-blue)); 
+            border-radius: 10px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        .color-swatch {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .color-swatch.selected {
+            transform: scale(1.25);
+            box-shadow: 0 0 12px #ffffff, 0 0 20px var(--neon-blue);
+            border-color: #ffffff !important;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        .step-active {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+        }
+        .step-done {
+            background: var(--neon-green);
+            color: #050510;
+        }
+        .step-pending {
+            background: rgba(255, 255, 255, 0.1);
+            color: #888;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-100">
+
+    <canvas id="sparkle-canvas"></canvas>
+
+    <header class="fixed w-full top-0 z-50 glass-panel border-b-0 py-4 transition-all duration-300">
+        <div class="container mx-auto px-4 md:px-6 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 cursor-pointer" id="nav-brand">
+                <i class="fa-solid fa-cube text-3xl" style="color: var(--neon-blue); filter: drop-shadow(0 0 8px var(--neon-blue));"></i>
+                <div>
+                    <span class="logo-text text-xl md:text-2xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-[#bc13fe] via-[#00f3ff] to-white">3D NOVA</span>
+                    <span class="hidden sm:block text-[10px] text-cyan-300 tracking-widest uppercase font-semibold">Impression Sur Mesure</span>
+                </div>
+            </div>
+            
+            <!-- Navigation Actions -->
+            <div class="flex items-center gap-3 md:gap-4">
+                <!-- Bouton Mes Commandes -->
+                <button id="nav-orders-btn" class="hidden relative p-2.5 rounded-xl glass-panel hover:border-purple-400 transition flex items-center gap-2 text-xs font-bold text-purple-300">
+                    <i class="fa-solid fa-box-open text-purple-400 text-sm"></i>
+                    <span class="hidden md:inline">Mes Commandes</span>
+                </button>
+
+                <!-- Bouton Mon Compte -->
+                <button id="auth-btn" class="p-2.5 rounded-xl glass-panel hover:border-cyan-400 transition flex items-center gap-2 text-xs font-bold text-cyan-300">
+                    <i class="fa-solid fa-user text-cyan-400 text-sm"></i>
+                    <span id="auth-btn-text" class="hidden sm:inline">Se Connecter</span>
+                </button>
+
+                <!-- Bouton Panier -->
+                <button id="cart-btn" class="relative group p-2.5 rounded-xl glass-panel hover:border-cyan-400 transition flex items-center gap-2">
+                    <i class="fa-solid fa-cart-shopping text-lg text-cyan-400 group-hover:scale-110 transition-transform"></i>
+                    <span class="hidden md:inline font-bold text-xs">Panier</span>
+                    <span id="cart-badge" class="bg-gradient-to-r from-pink-500 to-purple-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-[0_0_10px_rgba(255,0,255,0.6)] transform scale-0 transition-transform duration-300">
+                        0
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-28 pb-20">
+        <!-- Hero Banner -->
+        <section class="container mx-auto px-4 md:px-6 text-center mb-10 animate-fade-in">
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black mb-4 leading-tight">
+                Impression 3D <br/>
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-[#00f3ff] via-[#bc13fe] to-[#ffd700] filter drop-shadow-[0_0_20px_rgba(0,243,255,0.5)]">
+                    Scintillante & Personnalisée
+                </span>
+            </h1>
+            <p class="text-gray-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                Objets sur mesure, choix de la taille (<strong class="text-cyan-300">5 à 20 cm</strong>), personnalisation de couleurs & <strong class="text-amber-300">codes promo exclusifs</strong> !
+            </p>
+        </section>
+
+        <!-- Search Bar and Category Tabs -->
+        <section class="container mx-auto px-4 md:px-6 mb-10">
+            <div class="glass-panel p-4 rounded-2xl mb-6">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+                    <div class="relative w-full md:w-80">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="search-input" placeholder="Rechercher un objet 3D..." class="w-full glass-input pl-10 pr-4 py-2.5 rounded-xl text-xs sm:text-sm">
+                    </div>
+                    <div class="text-xs text-gray-400 flex items-center gap-2">
+                        <i class="fa-solid fa-ticket text-amber-400"></i>
+                        <span>Astuce : Code promo <strong class="text-amber-300">NOVA10</strong> (-10%) ou <strong class="text-amber-300">BIENVENUE5</strong> (-5€)</span>
+                    </div>
+                </div>
+
+                <!-- Boutons de catégories -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none" id="category-bar"></div>
+            </div>
+        </section>
+
+        <section class="container mx-auto px-4 md:px-6">
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            
+            <div id="no-products" class="hidden text-center py-16 glass-panel rounded-2xl">
+                <i class="fa-solid fa-ghost text-5xl text-gray-500 mb-4"></i>
+                <p class="text-gray-400 text-lg">Aucun produit ne correspond à cette recherche.</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="config-modal" class="fixed inset-0 z-[60] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" id="config-overlay"></div>
+        
+        <div class="relative glass-panel rounded-3xl w-full max-w-2xl p-6 md:p-8 shadow-[0_0_50px_rgba(0,243,255,0.25)] border border-cyan-500/30 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="config-box">
+            <button id="close-config-btn" class="absolute top-5 right-5 text-gray-400 hover:text-white transition w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div class="relative rounded-2xl overflow-hidden border border-white/10 group">
+                    <img id="modal-img" src="" alt="Produit" class="w-full h-64 object-cover">
+                    <span id="modal-category-badge" class="absolute top-3 left-3 bg-black/70 backdrop-blur-md text-cyan-300 text-xs font-bold px-3 py-1 rounded-full border border-cyan-400/40"></span>
+                </div>
+
+                <div>
+                    <h2 id="modal-title" class="text-2xl font-bold orbitron text-white mb-2"></h2>
+                    <p id="modal-desc" class="text-gray-300 text-xs leading-relaxed mb-4"></p>
+                    
+                    <!-- Sélection de la Taille -->
+                    <div class="mb-5">
+                        <label class="block text-xs font-semibold text-cyan-300 uppercase tracking-wider mb-2 flex justify-between">
+                            <span><i class="fa-solid fa-ruler-combined mr-1"></i> 1. Choisir la Taille</span>
+                            <span id="selected-size-label" class="text-white font-normal text-xs">Moyen (10 cm)</span>
+                        </label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2" id="sizes-container"></div>
+                    </div>
+
+                    <!-- Choix Couleur Principale -->
+                    <div class="mb-5">
+                        <label class="block text-xs font-semibold text-purple-300 uppercase tracking-wider mb-2">
+                            <i class="fa-solid fa-palette mr-1"></i> 2. Couleur de base PLA
+                        </label>
+                        <div class="flex flex-wrap gap-2.5 items-center" id="colors-container"></div>
+                        <span id="selected-color-name" class="text-[11px] text-gray-400 mt-1.5 block">Couleur sélectionnée: Silk Gold</span>
+                    </div>
+
+                    <!-- Option Personnalisation Avancée -->
+                    <div class="mb-6 p-3.5 glass-panel rounded-xl border border-purple-500/30 bg-purple-950/20">
+                        <div class="flex items-start gap-3">
+                            <input type="checkbox" id="customization-toggle" class="mt-1 w-4 h-4 rounded accent-purple-500 cursor-pointer">
+                            <div class="flex-1">
+                                <label for="customization-toggle" class="text-xs font-bold text-white cursor-pointer flex justify-between">
+                                    <span>🎨 Option Personnalisation Couleur</span>
+                                    <span class="text-amber-300 font-extrabold">+3.50 €</span>
+                                </label>
+                                <p class="text-[11px] text-gray-400 mt-0.5">Bi-couleur, finition peinture à la main ou détails gravés.</p>
+                            </div>
+                        </div>
+                        <div id="custom-text-box" class="mt-3 hidden">
+                            <input type="text" id="custom-details" placeholder="Précisez vos souhaits de couleurs ou texte à intégrer..." class="w-full glass-input px-3 py-1.5 rounded-lg text-xs">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t border-white/10 pt-4">
+                        <div>
+                            <span class="text-xs text-gray-400 block">Prix calculé</span>
+                            <span id="modal-calculated-price" class="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-400">0.00 €</span>
+                        </div>
+                        <button id="add-configured-to-cart" class="btn-neon px-6 py-3 rounded-xl text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-cart-plus"></i> Ajouter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="fixed inset-0 z-[70] hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-black/75 backdrop-blur-sm" id="cart-overlay"></div>
+        
+        <div class="absolute right-0 top-0 h-full w-full sm:w-[480px] glass-panel border-l border-white/10 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col" id="cart-drawer">
+            <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2 orbitron">
+                    <i class="fa-solid fa-basket-shopping text-cyan-400"></i> Votre Panier
+                </h2>
+                <button id="close-cart-btn" class="text-gray-400 hover:text-white transition text-xl w-8 h-8 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-5 space-y-4" id="cart-items-container">
+                <div id="empty-cart-msg" class="text-center text-gray-500 py-16">
+                    <i class="fa-solid fa-box-open text-6xl mb-4 opacity-40"></i>
+                    <p class="text-base font-semibold">Votre panier est vide.</p>
+                    <p class="text-xs text-gray-400 mt-1">Sélectionnez un article et personnalisez-le !</p>
+                </div>
+            </div>
+            
+            <div class="p-5 border-t border-white/10 bg-black/60 space-y-3">
+                <div class="glass-panel p-3 rounded-xl border border-amber-500/30">
+                    <label class="block text-[11px] font-bold text-amber-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                        <i class="fa-solid fa-ticket"></i> Ticket de réduction / Code Promo
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="text" id="coupon-code-input" placeholder="Ex: NOVA10, BIENVENUE5" class="w-full glass-input px-3 py-1.5 rounded-lg text-xs uppercase font-mono tracking-wider">
+                        <button id="apply-coupon-btn" class="px-3 py-1.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 rounded-lg text-xs font-bold transition">
+                            Appliquer
+                        </button>
+                    </div>
+                    <div id="applied-coupon-badge" class="hidden mt-2 p-1.5 bg-amber-500/10 rounded-lg flex items-center justify-between text-xs text-amber-300 border border-amber-500/20">
+                        <span id="coupon-details-text">Code appliqué</span>
+                        <button id="remove-coupon-btn" class="text-red-400 hover:text-red-300 text-xs ml-2"><i class="fa-solid fa-circle-xmark"></i></button>
+                    </div>
+                </div>
+
+                <div class="space-y-1 text-xs text-gray-300">
+                    <div class="flex justify-between">
+                        <span>Sous-total :</span>
+                        <span id="cart-subtotal" class="font-bold text-white">0.00 €</span>
+                    </div>
+                    <div id="discount-row" class="hidden flex justify-between text-amber-300">
+                        <span>Réduction appliquée :</span>
+                        <span id="cart-discount" class="font-bold">-0.00 €</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm font-black text-white pt-2 border-t border-white/10">
+                        <span>Total de la commande :</span>
+                        <span class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400" id="cart-total">0.00 €</span>
+                    </div>
+                </div>
+
+                <button id="checkout-btn" class="w-full btn-neon py-3.5 rounded-xl text-xs hidden flex items-center justify-center gap-2">
+                    Valider la commande <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="fixed inset-0 z-[80] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/85 backdrop-blur-md" id="auth-overlay"></div>
+        
+        <div class="relative glass-panel rounded-3xl w-full max-w-md p-6 sm:p-8 shadow-[0_0_50px_rgba(0,243,255,0.3)] border border-cyan-500/30 transform scale-95 transition-transform duration-300" id="auth-box">
+            <button id="close-auth-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="flex border-b border-white/10 mb-6" id="auth-tabs">
+                <button id="tab-login-btn" class="flex-1 py-2 text-center text-sm font-bold text-cyan-300 border-b-2 border-cyan-400">
+                    Se Connecter
+                </button>
+                <button id="tab-register-btn" class="flex-1 py-2 text-center text-sm font-bold text-gray-400 hover:text-white">
+                    Créer un Compte
+                </button>
+            </div>
+
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Email *</label>
+                    <input type="email" id="login-email" required placeholder="nom@exemple.com" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Mot de passe *</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                </div>
+                <button type="submit" class="w-full btn-neon py-3 rounded-xl text-xs font-bold">
+                    <i class="fa-solid fa-right-to-bracket mr-1"></i> Connexion
+                </button>
+            </form>
+
+            <form id="register-form" class="space-y-4 hidden">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Prénom *</label>
+                        <input type="text" id="reg-prenom" required placeholder="Jean" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Nom *</label>
+                        <input type="text" id="reg-nom" required placeholder="Dupont" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Email *</label>
+                    <input type="email" id="reg-email" required placeholder="nom@exemple.com" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Mot de passe *</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                </div>
+                <button type="submit" class="w-full btn-neon py-3 rounded-xl text-xs font-bold">
+                    <i class="fa-solid fa-user-plus mr-1"></i> Créer mon Compte
+                </button>
+            </form>
+
+            <div id="user-profile-view" class="hidden text-center space-y-4">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 p-0.5 mx-auto">
+                    <div class="w-full h-full bg-slate-900 rounded-full flex items-center justify-center">
+                        <i class="fa-solid fa-user text-2xl text-cyan-300"></i>
+                    </div>
+                </div>
+                <div>
+                    <h3 id="user-display-name" class="text-lg font-bold text-white orbitron">---</h3>
+                    <p id="user-display-email" class="text-xs text-gray-400">---</p>
+                </div>
+
+                <div class="glass-panel p-3.5 rounded-xl border border-white/10 text-left space-y-2">
+                    <span class="text-[10px] font-bold text-cyan-300 uppercase tracking-wider block">
+                        <i class="fa-solid fa-truck-ramp-box mr-1"></i> Coordonnées
+                    </span>
+                    <input type="tel" id="profile-phone" placeholder="N° de Téléphone" class="w-full glass-input px-3 py-1.5 rounded-lg text-xs">
+                    <textarea id="profile-address" rows="2" placeholder="Adresse de livraison..." class="w-full glass-input px-3 py-1.5 rounded-lg text-xs"></textarea>
+                    <button id="btn-save-profile" class="w-full py-1.5 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 rounded-lg text-xs font-bold transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i> Enregistrer les modifications
+                    </button>
+                </div>
+
+                <div class="pt-2 border-t border-white/10 space-y-2">
+                    <button id="btn-view-my-orders" class="w-full py-2.5 bg-purple-600/30 hover:bg-purple-600/50 text-purple-200 border border-purple-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-box-open"></i> Voir Mes Commandes
+                    </button>
+                    <button id="btn-logout" class="w-full py-2.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="orders-modal" class="fixed inset-0 z-[80] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/85 backdrop-blur-md" id="orders-overlay"></div>
+        
+        <div class="relative glass-panel rounded-3xl w-full max-w-3xl p-6 sm:p-8 shadow-[0_0_50px_rgba(188,19,254,0.3)] border border-purple-500/30 transform scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto" id="orders-box">
+            <button id="close-orders-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="flex items-center gap-3 mb-6">
+                <i class="fa-solid fa-boxes-packing text-2xl text-purple-400"></i>
+                <div>
+                    <h2 class="text-xl font-bold orbitron text-white">Suivi des Commandes</h2>
+                    <p class="text-xs text-gray-400">Consultez l'état d'avancement de vos impressions 3D en temps réel</p>
+                </div>
+            </div>
+
+            <div id="orders-list-container" class="space-y-6">
+                <div class="text-center text-gray-500 py-12">
+                    <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-purple-400"></i>
+                    <p class="text-xs">Chargement de vos commandes...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="checkout-modal" class="fixed inset-0 z-[80] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/85 backdrop-blur-md" id="checkout-overlay"></div>
+        
+        <div class="relative glass-panel rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-[0_0_50px_rgba(188,19,254,0.3)] border border-purple-500/30 transform scale-95 transition-transform duration-300" id="checkout-box">
+            <button id="close-checkout-btn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition w-8 h-8 rounded-full bg-white/5 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-paper-plane text-3xl text-cyan-400 mb-2"></i>
+                <h2 class="text-2xl font-black orbitron bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">Finaliser la Commande</h2>
+                <p class="text-gray-400 text-xs mt-1">Vos coordonnées pour le suivi de fabrication et d'expédition.</p>
+            </div>
+            
+            <form id="checkout-form" class="space-y-4">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Prénom *</label>
+                        <input type="text" id="prenom" required placeholder="Jean" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Nom *</label>
+                        <input type="text" id="nom" required placeholder="Dupont" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-gray-300 uppercase mb-1">Email *</label>
+                    <input type="email" id="email" required placeholder="jean.dupont@example.com" class="w-full glass-input rounded-xl px-3.5 py-2.5 text-xs">
+                </div>
+
+                <div class="p-3 glass-panel rounded-xl text-xs space-y-1 text-gray-300 border border-white/10">
+                    <div class="flex justify-between">
+                        <span>Articles :</span>
+                        <span id="summary-items-count" class="font-bold text-cyan-300">0</span>
+                    </div>
+                    <div id="summary-discount-row" class="hidden flex justify-between text-amber-300">
+                        <span>Réduction :</span>
+                        <span id="summary-discount-price">-0.00 €</span>
+                    </div>
+                    <div class="flex justify-between font-bold text-sm text-white pt-1 border-t border-white/10">
+                        <span>Montant Total à Payer :</span>
+                        <span id="summary-total-price" class="text-purple-300">0.00 €</span>
+                    </div>
+                </div>
+
+                <div id="loading-spinner" class="hidden justify-center py-2">
+                    <i class="fa-solid fa-circle-notch fa-spin text-3xl text-cyan-400"></i>
+                </div>
+
+                <button type="submit" id="submit-order-btn" class="w-full btn-neon py-3.5 rounded-xl text-xs mt-4">
+                    <i class="fa-solid fa-check-circle mr-2"></i> Envoyer et Lancer la Fabrication
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-panel border border-cyan-500/50 px-6 py-3 rounded-full text-white shadow-[0_0_25px_rgba(0,243,255,0.4)] flex items-center gap-3 opacity-0 pointer-events-none transition-all duration-300 z-[90]">
+        <i class="fa-solid fa-circle-check text-cyan-400 text-lg"></i>
+        <span id="toast-msg" class="text-xs sm:text-sm font-semibold">Message Toast</span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            updateDoc, 
+            doc, 
+            setDoc,
+            getDoc,
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuration Firebase avec secours autonome LocalStorage pour VS Code & GitHub Pages
+        const defaultFirebaseConfig = {
+            apiKey: "AIzaSyAa0yiYfzvibsdxc0e2z_d8YG_jzaTTp-Y",
+            authDomain: "d-nova-64d2e.firebaseapp.com",
+            projectId: "d-nova-64d2e",
+            storageBucket: "d-nova-64d2e.firebasestorage.app",
+            messagingSenderId: "272470384095",
+            appId: "1:272470384095:web:939298d92479a62d46f86a"
+        };
+
+        const appId = 'd-nova-64d2e';
+        let app, db, auth;
+        let isFirebaseReady = false;
+        let currentUser = null;
+        let userProfileData = null;
+        let favorites = [];
+        let coupons = {};
+        let products = [];
+
+        const initialCategories = [
+            { id: 'all', name: 'Tous les objets', icon: 'fa-border-all' },
+            { id: 'favorites', name: 'Mes Favoris', icon: 'fa-heart text-pink-400' },
+            { id: 'animaux', name: 'Animaux', icon: 'fa-paw' },
+            { id: 'deco', name: 'Déco Intérieur', icon: 'fa-couch' },
+            { id: 'noel', name: 'Noël', icon: 'fa-snowflake' },
+            { id: 'evenement', name: 'Anniversaire & Mariage', icon: 'fa-cake-candles' },
+            { id: 'gaming', name: 'Gaming', icon: 'fa-gamepad' },
+            { id: 'accessoire', name: 'Accessoires', icon: 'fa-key' }
+        ];
+
+        const sizes = [
+            { id: 'S', name: 'Petit', dimension: '5 cm', multiplier: 1.0 },
+            { id: 'M', name: 'Moyen', dimension: '10 cm', multiplier: 1.45 },
+            { id: 'L', name: 'Grand', dimension: '15 cm', multiplier: 1.95 },
+            { id: 'XL', name: 'Géant', dimension: '20 cm', multiplier: 2.6 }
+        ];
+
+        const colors = [
+            { id: 'gold', name: 'Or Soyeux', hex: '#ffd700' },
+            { id: 'cyan', name: 'Néon Cyan', hex: '#00f3ff' },
+            { id: 'purple', name: 'Violet Néon', hex: '#bc13fe' },
+            { id: 'white', name: 'Blanc Pur', hex: '#ffffff' },
+            { id: 'black', name: 'Noir Mat', hex: '#1e1e24' },
+            { id: 'green', name: 'Vert Émeraude', hex: '#10b981' },
+            { id: 'red', name: 'Rouge Rubis', hex: '#ef4444' }
+        ];
+
+        const initialPromoCodes = {
+            'NOVA10': { type: 'percent', val: 10, desc: '10% de réduction' },
+            'BIENVENUE5': { type: 'fixed', val: 5.0, desc: '5,00 € de réduction' },
+            '3DLOVE': { type: 'percent', val: 15, desc: '15% de réduction' }
+        };
+
+        const CUSTOM_COLOR_FEE = 3.50;
+
+        const initialProducts = [
+            { id: "p1", name: "Dragon Articulé Crystal", category: "animaux", basePrice: 19.90, description: "Dragon légendaire entièrement articulé avec maillons souples.", image: "https://placehold.co/600x400/101020/00f3ff?text=Dragon+Articul%C3%A9&font=Orbitron", badge: "Top Ventes" },
+            { id: "p2", name: "T-Rex Articulé Mini", category: "animaux", basePrice: 14.50, description: "Dinosaure flexible et interactif idéal pour bureau.", image: "https://placehold.co/600x400/101020/10b981?text=T-Rex+Articul%C3%A9&font=Orbitron", badge: null },
+            { id: "p3", name: "Chaton Mignon Sculpté", category: "animaux", basePrice: 12.00, description: "Figurine de chat aux lignes épurées et géométriques.", image: "https://placehold.co/600x400/101020/ffd700?text=Chaton+Geometrique&font=Orbitron", badge: "Nouveau" },
+            { id: "p4", name: "Vase Vague Paramétrique", category: "deco", basePrice: 16.00, description: "Design futuriste en torsade pour fleurs séchées.", image: "https://placehold.co/600x400/101020/bc13fe?text=Vase+Parametrique&font=Orbitron", badge: "Populaire" },
+            { id: "p5", name: "Pot Plante Face Sculptée", category: "deco", basePrice: 15.50, description: "Pot de fleur artistique en forme de visage minimaliste.", image: "https://placehold.co/600x400/101020/ffffff?text=Pot+Visage+Design&font=Orbitron", badge: null },
+            { id: "p6", name: "Veilleuse Lune Lithophanie", category: "deco", basePrice: 28.00, description: "Reproduction de la lune révélant ses reliefs par transparence.", image: "https://placehold.co/600x400/101020/ffd700?text=Lampe+Lithophanie&font=Orbitron", badge: "Premium" },
+            { id: "p7", name: "Set Flocons Noël 3D", category: "noel", basePrice: 9.90, description: "Lot de décorations géométriques pour le sapin.", image: "https://placehold.co/600x400/101020/00f3ff?text=Flocons+Noel+3D&font=Orbitron", badge: "Saison" },
+            { id: "p8", name: "Sapin Torsadé Lumineux", category: "noel", basePrice: 17.50, description: "Mini sapin moderne avec socle pour bougie LED.", image: "https://placehold.co/600x400/101020/10b981?text=Sapin+Design+Noel&font=Orbitron", badge: null },
+            { id: "p9", name: "Topper Gâteau Personnalisé", category: "evenement", basePrice: 12.90, description: "Inscription sur mesure pour pièce montée d'anniversaire ou mariage.", image: "https://placehold.co/600x400/101020/ffd700?text=Topper+Gateau&font=Orbitron", badge: "Personnalisable" },
+            { id: "p10", name: "Cœurs Entrelacés Sculptés", category: "evenement", basePrice: 18.00, description: "Sculpture élégante symbolisant l'union.", image: "https://placehold.co/600x400/101020/ef4444?text=Coeurs+Mariage&font=Orbitron", badge: null },
+            { id: "p11", name: "Support Casque Cyberpunk", category: "gaming", basePrice: 22.00, description: "Support très stable avec détails futuristes.", image: "https://placehold.co/600x400/101020/00f3ff?text=Support+Casque+Gaming&font=Orbitron", badge: "Best Seller" },
+            { id: "p12", name: "Support Manette PS5/Xbox", category: "gaming", basePrice: 15.00, description: "Socle de rangement ergonomique pour manette.", image: "https://placehold.co/600x400/101020/bc13fe?text=Support+Manette&font=Orbitron", badge: null },
+            { id: "p13", name: "Porte-clef Ergonomique", category: "accessoire", basePrice: 6.50, description: "Accessoire ultraléger et résistant en PLA imprimé.", image: "https://placehold.co/600x400/101020/ffffff?text=Porte-clef+Ultra&font=Orbitron", badge: null },
+            { id: "p14", name: "Organiseur Câble Hexagonal", category: "accessoire", basePrice: 8.90, description: "Rangement de bureau pour câbles USB.", image: "https://placehold.co/600x400/101020/00f3ff?text=Organiseur+Cables&font=Orbitron", badge: null }
+        ];
+
+        let cart = [];
+        let activeCategory = 'all';
+        let searchQuery = '';
+        let currentSelectedProduct = null;
+        let selectedSize = sizes[1];
+        let selectedColor = colors[0];
+        let isCustomColorEnabled = false;
+        let appliedCoupon = null;
+        let userOrdersList = [];
+
+        try {
+            app = initializeApp(defaultFirebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            isFirebaseReady = true;
+        } catch (error) {
+            console.warn("Firebase n'est pas configuré. Mode autonome LocalStorage activé.", error);
+            isFirebaseReady = false;
+        }
+
+        // Auto-chargement LocalStorage au démarrage (Secours hors ligne / GitHub Pages)
+        function loadLocalStorageData() {
+            try {
+                const storedCart = localStorage.getItem('3dnova_cart');
+                if (storedCart) cart = JSON.parse(storedCart);
+
+                const storedFavs = localStorage.getItem('3dnova_favs');
+                if (storedFavs) favorites = JSON.parse(storedFavs);
+
+                const storedUser = localStorage.getItem('3dnova_user');
+                if (storedUser) {
+                    userProfileData = JSON.parse(storedUser);
+                    currentUser = { email: userProfileData.email, uid: userProfileData.uid || 'local-user' };
+                }
+
+                const storedOrders = localStorage.getItem('3dnova_orders');
+                if (storedOrders) userOrdersList = JSON.parse(storedOrders);
+            } catch(e) {
+                console.error("Erreur de lecture LocalStorage", e);
+            }
+        }
+
+        function saveLocalStorageCart() {
+            try {
+                localStorage.setItem('3dnova_cart', JSON.stringify(cart));
+            } catch(e){}
+        }
+
+        function saveLocalStorageFavs() {
+            try {
+                localStorage.setItem('3dnova_favs', JSON.stringify(favorites));
+            } catch(e){}
+        }
+
+        function saveLocalStorageOrders() {
+            try {
+                localStorage.setItem('3dnova_orders', JSON.stringify(userOrdersList));
+            } catch(e){}
+        }
+
+        function saveLocalStorageUser() {
+            try {
+                if (userProfileData) localStorage.setItem('3dnova_user', JSON.stringify(userProfileData));
+                else localStorage.removeItem('3dnova_user');
+            } catch(e){}
+        }
+
+        if (isFirebaseReady) {
+            initAuthAndData();
+        } else {
+            loadLocalStorageData();
+            products = [...initialProducts];
+            coupons = { ...initialPromoCodes };
+            updateCartUI(false);
+            updateAuthUI();
+        }
+
+        async function initAuthAndData() {
+            try {
+                await signInAnonymously(auth);
+            } catch (e) {
+                console.warn("Connexion anonyme échouée, passage en mode local:", e);
+                isFirebaseReady = false;
+                loadLocalStorageData();
+                products = [...initialProducts];
+                coupons = { ...initialPromoCodes };
+                updateCartUI(false);
+                updateAuthUI();
+                return;
+            }
+
+            onAuthStateChanged(auth, async (user) => {
+                currentUser = user;
+                if (user) {
+                    syncProductsFromDB();
+                    syncCouponsFromDB();
+                    loadFavoritesFromDB();
+                    loadCartFromDB();
+                    
+                    if (!user.isAnonymous) {
+                        try {
+                            const userDocRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'info');
+                            const docSnap = await getDoc(userDocRef);
+                            if (docSnap.exists()) {
+                                userProfileData = docSnap.data();
+                            }
+                        } catch (e) {
+                            console.warn("Impossible de récupérer le profil:", e);
+                        }
+                    }
+                    updateAuthUI();
+                    loadUserOrders();
+                }
+            });
+        }
+
+        function syncProductsFromDB() {
+            if (!auth || !auth.currentUser) return;
+            const productsCol = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+            
+            onSnapshot(productsCol, async (snapshot) => {
+                if (snapshot.empty) {
+                    for (const prod of initialProducts) {
+                        try { await setDoc(doc(productsCol, prod.id), prod); } catch(e){}
+                    }
+                    products = [...initialProducts];
+                } else {
+                    const fetched = [];
+                    snapshot.forEach(docSnap => {
+                        fetched.push({ id: docSnap.id, ...docSnap.data() });
+                    });
+                    products = fetched;
+                }
+                renderProducts();
+            }, () => {
+                products = [...initialProducts];
+                renderProducts();
+            });
+        }
+
+        function syncCouponsFromDB() {
+            if (!auth || !auth.currentUser) return;
+            const couponsCol = collection(db, 'artifacts', appId, 'public', 'data', 'coupons');
+            
+            onSnapshot(couponsCol, async (snapshot) => {
+                if (snapshot.empty) {
+                    for (const [code, data] of Object.entries(initialPromoCodes)) {
+                        try { await setDoc(doc(couponsCol, code), data); } catch(e){}
+                    }
+                    coupons = { ...initialPromoCodes };
+                } else {
+                    const loaded = {};
+                    snapshot.forEach(docSnap => {
+                        loaded[docSnap.id] = docSnap.data();
+                    });
+                    coupons = loaded;
+                }
+            }, () => {
+                coupons = { ...initialPromoCodes };
+            });
+        }
+
+        async function saveCartToDB() {
+            saveLocalStorageCart();
+            if (!currentUser || !isFirebaseReady) return;
+            try {
+                const cartRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'cart', 'active');
+                await setDoc(cartRef, {
+                    items: cart,
+                    appliedCoupon: appliedCoupon,
+                    updatedAt: new Date().toISOString()
+                });
+            } catch (e) {}
+        }
+
+        async function loadCartFromDB() {
+            if (!currentUser || !isFirebaseReady) return;
+            try {
+                const cartRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'cart', 'active');
+                const snap = await getDoc(cartRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    cart = data.items || [];
+                    appliedCoupon = data.appliedCoupon || null;
+                    if (appliedCoupon) {
+                        const badge = document.getElementById('applied-coupon-badge');
+                        document.getElementById('coupon-details-text').textContent = `🎟️ ${appliedCoupon.code} (${appliedCoupon.desc})`;
+                        badge.classList.remove('hidden');
+                    }
+                    updateCartUI(false);
+                }
+            } catch (e) {}
+        }
+
+        async function toggleFavorite(productId) {
+            const idx = favorites.indexOf(productId);
+            if (idx > -1) {
+                favorites.splice(idx, 1);
+                showToast("Retiré de vos favoris");
+            } else {
+                favorites.push(productId);
+                showToast("Ajouté à vos favoris ❤️");
+            }
+            saveLocalStorageFavs();
+            renderProducts();
+
+            if (isFirebaseReady && currentUser) {
+                try {
+                    const favRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'favorites', 'list');
+                    await setDoc(favRef, { list: favorites, updatedAt: new Date().toISOString() });
+                } catch (e) {}
+            }
+        }
+
+        async function loadFavoritesFromDB() {
+            if (!currentUser || !isFirebaseReady) return;
+            try {
+                const favRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'favorites', 'list');
+                const snap = await getDoc(favRef);
+                if (snap.exists()) {
+                    favorites = snap.data().list || [];
+                    saveLocalStorageFavs();
+                    renderProducts();
+                }
+            } catch (e) {}
+        }
+
+        function renderCategories() {
+            const categoryBar = document.getElementById('category-bar');
+            categoryBar.innerHTML = '';
+
+            initialCategories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = `btn-category px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 flex-shrink-0 ${activeCategory === cat.id ? 'active' : 'text-gray-300'}`;
+                btn.innerHTML = `<i class="fa-solid ${cat.icon}"></i> ${cat.name}`;
+                btn.addEventListener('click', () => {
+                    activeCategory = cat.id;
+                    renderCategories();
+                    renderProducts();
+                });
+                categoryBar.appendChild(btn);
+            });
+        }
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            const noProd = document.getElementById('no-products');
+            grid.innerHTML = '';
+
+            const listToDisplay = products.length ? products : initialProducts;
+
+            const filtered = listToDisplay.filter(p => {
+                let matchesCat = false;
+                if (activeCategory === 'favorites') {
+                    matchesCat = favorites.includes(p.id);
+                } else {
+                    matchesCat = (activeCategory === 'all' || p.category === activeCategory);
+                }
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.description.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                noProd.classList.remove('hidden');
+                if (activeCategory === 'favorites') {
+                    noProd.querySelector('p').textContent = "Aucun produit dans vos favoris pour le moment.";
+                } else {
+                    noProd.querySelector('p').textContent = "Aucun produit ne correspond à cette recherche.";
+                }
+                return;
+            } else {
+                noProd.classList.add('hidden');
+            }
+
+            filtered.forEach((product, idx) => {
+                const card = document.createElement('div');
+                card.className = `product-card glass-panel rounded-2xl overflow-hidden flex flex-col opacity-0 animate-fade-in border border-white/10`;
+                card.style.animationDelay = `${idx * 40}ms`;
+
+                let badgeHtml = '';
+                if (product.badge) {
+                    badgeHtml = `<span class="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-cyan-300 text-[10px] uppercase font-bold px-2.5 py-1 rounded-full border border-cyan-400/40 shadow-[0_0_10px_rgba(0,243,255,0.3)]">${product.badge}</span>`;
+                }
+
+                const catObj = initialCategories.find(c => c.id === product.category);
+                const isFav = favorites.includes(product.id);
+                const favHeartClass = isFav ? 'fa-solid fa-heart text-pink-500' : 'fa-regular fa-heart text-white/70 hover:text-pink-400';
+
+                card.innerHTML = `
+                    <div class="relative h-52 overflow-hidden group">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                        <span class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-gray-300 text-[11px] px-2.5 py-0.5 rounded-md border border-white/10">
+                            <i class="fa-solid ${catObj ? catObj.icon : 'fa-tag'} mr-1 text-cyan-400"></i> ${catObj ? catObj.name : product.category}
+                        </span>
+                        ${badgeHtml}
+                        <button class="favorite-btn absolute top-3 left-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center transition-transform hover:scale-110 z-10" data-id="${product.id}" title="Favori">
+                            <i class="${favHeartClass} text-sm"></i>
+                        </button>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="text-base font-bold text-white mb-1 orbitron">${product.name}</h3>
+                        <p class="text-gray-400 text-xs mb-4 flex-grow leading-relaxed">${product.description}</p>
+                        
+                        <div class="flex items-center justify-between pt-3 border-t border-white/10 mt-auto">
+                            <div>
+                                <span class="text-[10px] text-gray-400 block uppercase tracking-wider">À partir de</span>
+                                <span class="text-xl font-black text-cyan-300">${product.basePrice.toFixed(2)} €</span>
+                            </div>
+                            <button class="configure-btn btn-neon px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5" data-id="${product.id}">
+                                <i class="fa-solid fa-sliders"></i> Personnaliser
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const id = e.currentTarget.getAttribute('data-id');
+                    toggleFavorite(id);
+                });
+            });
+
+            document.querySelectorAll('.configure-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    openConfigModal(id);
+                });
+            });
+        }
+
+        function openConfigModal(productId) {
+            const listToSearch = products.length ? products : initialProducts;
+            currentSelectedProduct = listToSearch.find(p => p.id === productId);
+            if (!currentSelectedProduct) return;
+
+            selectedSize = sizes[1];
+            selectedColor = colors[0];
+            isCustomColorEnabled = false;
+
+            document.getElementById('modal-img').src = currentSelectedProduct.image;
+            document.getElementById('modal-title').textContent = currentSelectedProduct.name;
+            document.getElementById('modal-desc').textContent = currentSelectedProduct.description;
+
+            const catObj = initialCategories.find(c => c.id === currentSelectedProduct.category);
+            document.getElementById('modal-category-badge').textContent = catObj ? catObj.name : '';
+
+            document.getElementById('customization-toggle').checked = false;
+            document.getElementById('custom-text-box').classList.add('hidden');
+            document.getElementById('custom-details').value = '';
+
+            renderSizesUI();
+            renderColorsUI();
+            updateCalculatedPrice();
+
+            const modal = document.getElementById('config-modal');
+            const box = document.getElementById('config-box');
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeConfigModal() {
+            const modal = document.getElementById('config-modal');
+            const box = document.getElementById('config-box');
+            modal.classList.add('opacity-0');
+            box.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        function renderSizesUI() {
+            const container = document.getElementById('sizes-container');
+            container.innerHTML = '';
+
+            sizes.forEach(sz => {
+                const isSelected = selectedSize.id === sz.id;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `p-2 rounded-xl text-center text-xs font-semibold border transition-all ${isSelected ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 shadow-[0_0_10px_rgba(0,243,255,0.3)]' : 'border-white/10 bg-white/5 text-gray-300 hover:bg-white/10'}`;
+                btn.innerHTML = `
+                    <div class="font-bold">${sz.name}</div>
+                    <div class="text-[10px] opacity-75">${sz.dimension}</div>
+                `;
+                btn.addEventListener('click', () => {
+                    selectedSize = sz;
+                    document.getElementById('selected-size-label').textContent = `${sz.name} (${sz.dimension})`;
+                    renderSizesUI();
+                    updateCalculatedPrice();
+                });
+                container.appendChild(btn);
+            });
+        }
+
+        function renderColorsUI() {
+            const container = document.getElementById('colors-container');
+            container.innerHTML = '';
+
+            colors.forEach(col => {
+                const isSelected = selectedColor.id === col.id;
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.title = col.name;
+                btn.className = `color-swatch w-7 h-7 rounded-full border-2 border-white/20 transition-all ${isSelected ? 'selected' : ''}`;
+                btn.style.backgroundColor = col.hex;
+
+                btn.addEventListener('click', () => {
+                    selectedColor = col;
+                    document.getElementById('selected-color-name').textContent = `Couleur sélectionnée: ${col.name}`;
+                    renderColorsUI();
+                });
+                container.appendChild(btn);
+            });
+        }
+
+        document.getElementById('customization-toggle').addEventListener('change', (e) => {
+            isCustomColorEnabled = e.target.checked;
+            const textBox = document.getElementById('custom-text-box');
+            if (isCustomColorEnabled) {
+                textBox.classList.remove('hidden');
+            } else {
+                textBox.classList.add('hidden');
+            }
+            updateCalculatedPrice();
+        });
+
+        function calculateItemUnitPrice() {
+            if (!currentSelectedProduct) return 0;
+            let total = currentSelectedProduct.basePrice * selectedSize.multiplier;
+            if (isCustomColorEnabled) total += CUSTOM_COLOR_FEE;
+            return total;
+        }
+
+        function updateCalculatedPrice() {
+            const price = calculateItemUnitPrice();
+            document.getElementById('modal-calculated-price').textContent = `${price.toFixed(2)} €`;
+        }
+
+        document.getElementById('add-configured-to-cart').addEventListener('click', () => {
+            if (!currentSelectedProduct) return;
+
+            const unitPrice = calculateItemUnitPrice();
+            const customNotes = isCustomColorEnabled ? (document.getElementById('custom-details').value.trim() || 'Personnalisation Multi-couleurs') : null;
+
+            const cartItem = {
+                cartItemId: `${currentSelectedProduct.id}-${selectedSize.id}-${selectedColor.id}-${isCustomColorEnabled ? 'custom' : 'std'}-${Date.now()}`,
+                productId: currentSelectedProduct.id,
+                name: currentSelectedProduct.name,
+                image: currentSelectedProduct.image,
+                size: selectedSize,
+                color: selectedColor,
+                hasCustomization: isCustomColorEnabled,
+                customNotes: customNotes,
+                unitPrice: unitPrice,
+                quantity: 1
+            };
+
+            cart.push(cartItem);
+            updateCartUI();
+            closeConfigModal();
+            showToast(`${currentSelectedProduct.name} (${selectedSize.name}) ajouté au panier !`);
+        });
+
+        function updateCartUI(shouldSaveToDB = true) {
+            const badge = document.getElementById('cart-badge');
+            const itemsContainer = document.getElementById('cart-items-container');
+            const emptyMsg = document.getElementById('empty-cart-msg');
+            const cartSubtotalEl = document.getElementById('cart-subtotal');
+            const discountRow = document.getElementById('discount-row');
+            const cartDiscountEl = document.getElementById('cart-discount');
+            const cartTotal = document.getElementById('cart-total');
+            const checkoutBtn = document.getElementById('checkout-btn');
+
+            const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (totalItemsCount > 0) {
+                badge.textContent = totalItemsCount;
+                badge.classList.remove('scale-0');
+            } else {
+                badge.classList.add('scale-0');
+            }
+
+            if (shouldSaveToDB) saveCartToDB();
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = '';
+                itemsContainer.appendChild(emptyMsg);
+                emptyMsg.style.display = 'block';
+                checkoutBtn.classList.add('hidden');
+                cartSubtotalEl.textContent = '0.00 €';
+                cartTotal.textContent = '0.00 €';
+                discountRow.classList.add('hidden');
+                return;
+            }
+
+            emptyMsg.style.display = 'none';
+            checkoutBtn.classList.remove('hidden');
+            itemsContainer.innerHTML = '';
+
+            let subtotal = 0;
+
+            cart.forEach((item, index) => {
+                const itemSubtotal = item.unitPrice * item.quantity;
+                subtotal += itemSubtotal;
+
+                const itemEl = document.createElement('div');
+                itemEl.className = 'glass-panel p-3.5 rounded-2xl border border-white/10 relative flex gap-3.5 items-center';
+
+                let customBadgeHtml = '';
+                if (item.hasCustomization) {
+                    customBadgeHtml = `<div class="text-[10px] text-amber-300 font-semibold mt-0.5"><i class="fa-solid fa-paintbrush mr-1"></i> ${item.customNotes || 'Personnalisé'}</div>`;
+                }
+
+                itemEl.innerHTML = `
+                    <div class="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/10 relative">
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
+                        <span class="absolute bottom-1 right-1 w-3 h-3 rounded-full border border-white/50" style="background-color: ${item.color.hex};" title="${item.color.name}"></span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-white font-bold text-xs truncate pr-5 orbitron">${item.name}</h4>
+                        <div class="text-[11px] text-cyan-300 font-semibold">Taille : ${item.size.name} (${item.size.dimension})</div>
+                        <div class="text-[10px] text-gray-400">Couleur : ${item.color.name}</div>
+                        ${customBadgeHtml}
+                        <div class="text-xs font-black text-purple-300 mt-1">${itemSubtotal.toFixed(2)} €</div>
+                    </div>
+                    <div class="flex flex-col items-end gap-2">
+                        <button class="text-gray-400 hover:text-red-400 text-xs transition" onclick="window.removeFromCart(${index})">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                        <div class="flex items-center gap-2 bg-black/50 rounded-lg px-2 py-0.5 border border-white/10">
+                            <button class="text-gray-300 hover:text-white text-xs font-bold w-4" onclick="window.updateCartQty(${index}, -1)">-</button>
+                            <span class="text-xs text-white font-bold">${item.quantity}</span>
+                            <button class="text-gray-300 hover:text-white text-xs font-bold w-4" onclick="window.updateCartQty(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `;
+                itemsContainer.appendChild(itemEl);
+            });
+
+            let discountVal = 0;
+            if (appliedCoupon) {
+                if (appliedCoupon.type === 'percent') {
+                    discountVal = (subtotal * appliedCoupon.val) / 100;
+                } else if (appliedCoupon.type === 'fixed') {
+                    discountVal = Math.min(subtotal, appliedCoupon.val);
+                }
+            }
+
+            const grandTotal = Math.max(0, subtotal - discountVal);
+
+            cartSubtotalEl.textContent = `${subtotal.toFixed(2)} €`;
+            if (discountVal > 0) {
+                discountRow.classList.remove('hidden');
+                cartDiscountEl.textContent = `-${discountVal.toFixed(2)} €`;
+            } else {
+                discountRow.classList.add('hidden');
+            }
+            cartTotal.textContent = `${grandTotal.toFixed(2)} €`;
+        }
+
+        window.updateCartQty = function(index, delta) {
+            if (cart[index]) {
+                cart[index].quantity += delta;
+                if (cart[index].quantity <= 0) cart.splice(index, 1);
+                updateCartUI();
+            }
+        };
+
+        window.removeFromCart = function(index) {
+            if (cart[index]) {
+                cart.splice(index, 1);
+                updateCartUI();
+            }
+        };
+
+        document.getElementById('apply-coupon-btn').addEventListener('click', () => {
+            const input = document.getElementById('coupon-code-input');
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) return;
+
+            const couponsList = Object.keys(coupons).length ? coupons : initialPromoCodes;
+
+            if (couponsList[code]) {
+                appliedCoupon = { code: code, ...couponsList[code] };
+                input.value = '';
+                
+                const badge = document.getElementById('applied-coupon-badge');
+                document.getElementById('coupon-details-text').textContent = `🎟️ ${code} (${appliedCoupon.desc})`;
+                badge.classList.remove('hidden');
+
+                showToast(`Code Promo ${code} appliqué avec succès !`);
+                updateCartUI();
+            } else {
+                showToast("Code promo invalide ou expiré.", true);
+            }
+        });
+
+        document.getElementById('remove-coupon-btn').addEventListener('click', () => {
+            appliedCoupon = null;
+            document.getElementById('applied-coupon-badge').classList.add('hidden');
+            updateCartUI();
+            showToast("Code promo retiré.");
+        });
+
+        const authModal = document.getElementById('auth-modal');
+        const authBox = document.getElementById('auth-box');
+
+        function openAuthModal() {
+            authModal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                authModal.classList.remove('opacity-0');
+                authBox.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeAuthModal() {
+            authModal.classList.add('opacity-0');
+            authBox.classList.add('scale-95');
+            setTimeout(() => {
+                authModal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        document.getElementById('auth-btn').addEventListener('click', openAuthModal);
+        document.getElementById('close-auth-btn').addEventListener('click', closeAuthModal);
+        document.getElementById('auth-overlay').addEventListener('click', closeAuthModal);
+
+        const tabLoginBtn = document.getElementById('tab-login-btn');
+        const tabRegisterBtn = document.getElementById('tab-register-btn');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const userProfileView = document.getElementById('user-profile-view');
+
+        tabLoginBtn.addEventListener('click', () => {
+            tabLoginBtn.className = "flex-1 py-2 text-center text-sm font-bold text-cyan-300 border-b-2 border-cyan-400";
+            tabRegisterBtn.className = "flex-1 py-2 text-center text-sm font-bold text-gray-400 hover:text-white";
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+        });
+
+        tabRegisterBtn.addEventListener('click', () => {
+            tabRegisterBtn.className = "flex-1 py-2 text-center text-sm font-bold text-purple-300 border-b-2 border-purple-400";
+            tabLoginBtn.className = "flex-1 py-2 text-center text-sm font-bold text-gray-400 hover:text-white";
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+
+        function updateAuthUI() {
+            const authBtnText = document.getElementById('auth-btn-text');
+            const navOrdersBtn = document.getElementById('nav-orders-btn');
+
+            if (currentUser && (!currentUser.isAnonymous || userProfileData)) {
+                authBtnText.textContent = userProfileData ? `${userProfileData.prenom}` : (currentUser.email ? currentUser.email.split('@')[0] : "Mon Compte");
+                navOrdersBtn.classList.remove('hidden');
+
+                if (userProfileData) {
+                    document.getElementById('prenom').value = userProfileData.prenom || '';
+                    document.getElementById('nom').value = userProfileData.nom || '';
+                    document.getElementById('email').value = userProfileData.email || currentUser.email || '';
+                    document.getElementById('profile-phone').value = userProfileData.phone || '';
+                    document.getElementById('profile-address').value = userProfileData.address || '';
+                }
+
+                loginForm.classList.add('hidden');
+                registerForm.classList.add('hidden');
+                document.getElementById('auth-tabs').classList.add('hidden');
+                userProfileView.classList.remove('hidden');
+
+                document.getElementById('user-display-name').textContent = userProfileData ? `${userProfileData.prenom} ${userProfileData.nom}` : "Membre 3D Nova";
+                document.getElementById('user-display-email').textContent = userProfileData ? userProfileData.email : currentUser.email;
+
+            } else {
+                authBtnText.textContent = "Se Connecter";
+                navOrdersBtn.classList.add('hidden');
+
+                userProfileView.classList.add('hidden');
+                document.getElementById('auth-tabs').classList.remove('hidden');
+                tabLoginBtn.click();
+            }
+        }
+
+        document.getElementById('btn-save-profile').addEventListener('click', async () => {
+            const phone = document.getElementById('profile-phone').value.trim();
+            const address = document.getElementById('profile-address').value.trim();
+
+            userProfileData = { ...userProfileData, phone, address, updatedAt: new Date().toISOString() };
+            saveLocalStorageUser();
+            
+            if (isFirebaseReady && currentUser && !currentUser.isAnonymous) {
+                try {
+                    const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'info');
+                    await setDoc(userDocRef, userProfileData, { merge: true });
+                } catch (e) {}
+            }
+            showToast("Profil mis à jour !");
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prenom = document.getElementById('reg-prenom').value.trim();
+            const nom = document.getElementById('reg-nom').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+
+            if (!isFirebaseReady) {
+                userProfileData = { prenom, nom, email, uid: 'local-' + Date.now() };
+                currentUser = { email, uid: userProfileData.uid };
+                saveLocalStorageUser();
+                updateAuthUI();
+                closeAuthModal();
+                showToast(`Bienvenue ${prenom} ! Compte créé.`);
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                currentUser = userCredential.user;
+                userProfileData = { prenom, nom, email, createdAt: new Date().toISOString() };
+
+                const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'info');
+                await setDoc(userDocRef, userProfileData);
+
+                saveLocalStorageUser();
+                updateAuthUI();
+                closeAuthModal();
+                showToast(`Bienvenue ${prenom} !`);
+            } catch (err) {
+                userProfileData = { prenom, nom, email, uid: 'local-' + Date.now() };
+                currentUser = { email, uid: userProfileData.uid };
+                saveLocalStorageUser();
+                updateAuthUI();
+                closeAuthModal();
+                showToast(`Bienvenue ${prenom} ! (Mode autonome)`);
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!isFirebaseReady) {
+                userProfileData = { prenom: email.split('@')[0], nom: '', email, uid: 'local-user' };
+                currentUser = { email, uid: 'local-user' };
+                saveLocalStorageUser();
+                updateAuthUI();
+                closeAuthModal();
+                showToast("Connexion réussie !");
+                return;
+            }
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                currentUser = userCredential.user;
+                
+                const userDocRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'info');
+                const docSnap = await getDoc(userDocRef);
+                if (docSnap.exists()) {
+                    userProfileData = docSnap.data();
+                } else {
+                    userProfileData = { prenom: email.split('@')[0], nom: '', email };
+                }
+
+                saveLocalStorageUser();
+                updateAuthUI();
+                closeAuthModal();
+                showToast("Ravi de vous revoir !");
+            } catch (err) {
+                userProfileData = { prenom: email.split('@')[0], nom: '', email, uid: 'local-user' };
+                currentUser = { email, uid: 'local-user' };
+                saveLocalStorageUser();
+                updateAuthUI();
+                closeAuthModal();
+                showToast("Connecté (Mode local)");
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            if (isFirebaseReady && auth) {
+                try { await signOut(auth); } catch(e){}
+            }
+            currentUser = null;
+            userProfileData = null;
+            favorites = [];
+            cart = [];
+            localStorage.removeItem('3dnova_user');
+            updateAuthUI();
+            updateCartUI(false);
+            renderProducts();
+            closeAuthModal();
+            showToast("Vous êtes déconnecté.");
+        });
+
+        const ordersModal = document.getElementById('orders-modal');
+        const ordersBox = document.getElementById('orders-box');
+
+        function openOrdersModal() {
+            ordersModal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                ordersModal.classList.remove('opacity-0');
+                ordersBox.classList.remove('scale-95');
+            }, 10);
+            loadUserOrders();
+        }
+
+        function closeOrdersModal() {
+            ordersModal.classList.add('opacity-0');
+            ordersBox.classList.add('scale-95');
+            setTimeout(() => {
+                ordersModal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        document.getElementById('nav-orders-btn').addEventListener('click', openOrdersModal);
+        document.getElementById('btn-view-my-orders').addEventListener('click', () => {
+            closeAuthModal();
+            openOrdersModal();
+        });
+        document.getElementById('close-orders-btn').addEventListener('click', closeOrdersModal);
+        document.getElementById('orders-overlay').addEventListener('click', closeOrdersModal);
+
+        const ORDER_STATUS_STEPS = [
+            { key: 'traitement', label: 'En traitement', icon: 'fa-clipboard-check' },
+            { key: 'creation', label: 'En cours de création', icon: 'fa-cubes' },
+            { key: 'pret', label: 'Prêt & Livraison', icon: 'fa-truck-fast' },
+            { key: 'terminee', label: 'Terminée', icon: 'fa-circle-check' }
+        ];
+
+        function loadUserOrders() {
+            const container = document.getElementById('orders-list-container');
+
+            if (!isFirebaseReady || !currentUser || currentUser.isAnonymous) {
+                renderOrdersList(userOrdersList);
+                return;
+            }
+
+            try {
+                const ordersCol = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                
+                onSnapshot(ordersCol, (snapshot) => {
+                    const allOrders = [];
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if (data.userId === currentUser.uid || (currentUser.email && data.client?.email === currentUser.email)) {
+                            allOrders.push({ id: docSnap.id, ...data });
+                        }
+                    });
+
+                    allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    renderOrdersList(allOrders);
+                }, () => {
+                    renderOrdersList(userOrdersList);
+                });
+            } catch (error) {
+                renderOrdersList(userOrdersList);
+            }
+        }
+
+        function renderOrdersList(orders) {
+            const container = document.getElementById('orders-list-container');
+            container.innerHTML = '';
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 py-12">
+                        <i class="fa-solid fa-box-open text-5xl mb-3 opacity-40"></i>
+                        <p class="text-sm font-semibold">Aucune commande pour le moment.</p>
+                        <p class="text-xs text-gray-400">Passez votre première impression 3D dès aujourd'hui !</p>
+                    </div>
+                `;
+                return;
+            }
+
+            orders.forEach(order => {
+                const currentStatus = order.status || 'traitement';
+                let currentStepIndex = ORDER_STATUS_STEPS.findIndex(s => s.key === currentStatus);
+                if (currentStepIndex === -1) currentStepIndex = 0;
+
+                const card = document.createElement('div');
+                card.className = 'glass-panel p-5 rounded-2xl border border-white/10 space-y-4';
+
+                let stepsHtml = '';
+                ORDER_STATUS_STEPS.forEach((step, idx) => {
+                    let stepClass = 'step-pending';
+                    if (idx < currentStepIndex) stepClass = 'step-done';
+                    else if (idx === currentStepIndex) stepClass = 'step-active';
+
+                    stepsHtml += `
+                        <div class="flex flex-col items-center flex-1 text-center relative">
+                            <div class="step-circle ${stepClass} mb-1">
+                                <i class="fa-solid ${step.icon}"></i>
+                            </div>
+                            <span class="text-[10px] font-bold ${idx === currentStepIndex ? 'text-cyan-300' : 'text-gray-400'}">${step.label}</span>
+                        </div>
+                    `;
+                });
+
+                const formattedDate = new Date(order.createdAt).toLocaleDateString('fr-FR', {
+                    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-white/10 pb-3 gap-2">
+                        <div>
+                            <span class="text-xs font-mono font-bold text-cyan-300">N° ${order.id ? order.id.slice(0, 8) : 'COMMANDE'}</span>
+                            <span class="text-[10px] text-gray-400 block">${formattedDate}</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-extrabold text-purple-300 bg-purple-950/60 px-3 py-1 rounded-full border border-purple-500/30">
+                                Total: ${order.totalPrice ? order.totalPrice.toFixed(2) : '0.00'} €
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="py-2 px-2 bg-black/30 rounded-xl">
+                        <div class="flex justify-between items-center relative">
+                            ${stepsHtml}
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 pt-1">
+                        ${order.items.map(it => `
+                            <div class="flex justify-between items-center text-xs text-gray-300 bg-white/5 p-2 rounded-lg">
+                                <div>
+                                    <strong class="text-white">${it.name}</strong> (${it.size}) - <span class="text-cyan-300">${it.color}</span>
+                                    ${it.hasCustomization ? `<span class="text-amber-300 text-[10px] block">🎨 ${it.customNotes}</span>` : ''}
+                                </div>
+                                <span class="font-bold">${it.quantity}x ${it.unitPrice.toFixed(2)}€</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="pt-2 flex justify-end items-center gap-2 text-[10px]">
+                        <span class="text-gray-500">Modifier l'étape :</span>
+                        <select class="glass-input px-2 py-1 rounded-lg text-[10px] text-cyan-300 bg-slate-900 cursor-pointer" onchange="window.updateOrderStatus('${order.id}', this.value)">
+                            ${ORDER_STATUS_STEPS.map(s => `<option value="${s.key}" ${s.key === currentStatus ? 'selected' : ''}>${s.label}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        window.updateOrderStatus = async function(orderId, newStatus) {
+            const target = userOrdersList.find(o => o.id === orderId);
+            if (target) target.status = newStatus;
+            saveLocalStorageOrders();
+            renderOrdersList(userOrdersList);
+
+            if (isFirebaseReady) {
+                try {
+                    const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderId);
+                    await updateDoc(orderRef, { status: newStatus, updatedAt: new Date().toISOString() });
+                } catch (err) {}
+            }
+            showToast("Statut mis à jour !");
+        };
+
+        const cartModal = document.getElementById('cart-modal');
+        const cartDrawer = document.getElementById('cart-drawer');
+        const checkoutModal = document.getElementById('checkout-modal');
+        const checkoutBox = document.getElementById('checkout-box');
+
+        function openCart() {
+            cartModal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                cartModal.classList.remove('opacity-0');
+                cartDrawer.classList.remove('translate-x-full');
+            }, 10);
+        }
+
+        function closeCart() {
+            cartModal.classList.add('opacity-0');
+            cartDrawer.classList.add('translate-x-full');
+            setTimeout(() => {
+                cartModal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        function openCheckout() {
+            if (cart.length === 0) return;
+            
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+            
+            let discountVal = 0;
+            if (appliedCoupon) {
+                if (appliedCoupon.type === 'percent') discountVal = (subtotal * appliedCoupon.val) / 100;
+                else if (appliedCoupon.type === 'fixed') discountVal = Math.min(subtotal, appliedCoupon.val);
+            }
+
+            const grandTotal = Math.max(0, subtotal - discountVal);
+
+            document.getElementById('summary-items-count').textContent = totalCount;
+            if (discountVal > 0) {
+                document.getElementById('summary-discount-row').classList.remove('hidden');
+                document.getElementById('summary-discount-price').textContent = `-${discountVal.toFixed(2)} €`;
+            } else {
+                document.getElementById('summary-discount-row').classList.add('hidden');
+            }
+            document.getElementById('summary-total-price').textContent = `${grandTotal.toFixed(2)} €`;
+
+            closeCart();
+            setTimeout(() => {
+                checkoutModal.classList.remove('hidden');
+                document.body.classList.add('modal-open');
+                setTimeout(() => {
+                    checkoutModal.classList.remove('opacity-0');
+                    checkoutBox.classList.remove('scale-95');
+                }, 10);
+            }, 300);
+        }
+
+        function closeCheckout() {
+            checkoutModal.classList.add('opacity-0');
+            checkoutBox.classList.add('scale-95');
+            setTimeout(() => {
+                checkoutModal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        document.getElementById('cart-btn').addEventListener('click', openCart);
+        document.getElementById('close-cart-btn').addEventListener('click', closeCart);
+        document.getElementById('cart-overlay').addEventListener('click', closeCart);
+        document.getElementById('checkout-btn').addEventListener('click', openCheckout);
+        document.getElementById('close-checkout-btn').addEventListener('click', closeCheckout);
+        document.getElementById('checkout-overlay').addEventListener('click', closeCheckout);
+        document.getElementById('close-config-btn').addEventListener('click', closeConfigModal);
+        document.getElementById('config-overlay').addEventListener('click', closeConfigModal);
+
+        const checkoutForm = document.getElementById('checkout-form');
+        const submitBtn = document.getElementById('submit-order-btn');
+        const spinner = document.getElementById('loading-spinner');
+
+        checkoutForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (cart.length === 0) {
+                showToast("Votre panier est vide", true);
+                return;
+            }
+
+            const prenom = document.getElementById('prenom').value.trim();
+            const nom = document.getElementById('nom').value.trim();
+            const email = document.getElementById('email').value.trim();
+
+            if (!prenom || !nom || !email) {
+                showToast("Veuillez remplir vos coordonnées", true);
+                return;
+            }
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
+            let discountVal = 0;
+            if (appliedCoupon) {
+                if (appliedCoupon.type === 'percent') discountVal = (subtotal * appliedCoupon.val) / 100;
+                else if (appliedCoupon.type === 'fixed') discountVal = Math.min(subtotal, appliedCoupon.val);
+            }
+            const grandTotal = Math.max(0, subtotal - discountVal);
+
+            const orderData = {
+                id: 'ORD-' + Math.random().toString(36).substr(2, 9),
+                client: { prenom, nom, email },
+                userId: currentUser ? currentUser.uid : 'anonymous',
+                items: cart.map(item => ({
+                    productId: item.productId,
+                    name: item.name,
+                    size: `${item.size.name} (${item.size.dimension})`,
+                    color: item.color.name,
+                    hasCustomization: item.hasCustomization,
+                    customNotes: item.customNotes || '',
+                    unitPrice: item.unitPrice,
+                    quantity: item.quantity,
+                    subtotal: item.unitPrice * item.quantity
+                })),
+                coupon: appliedCoupon ? appliedCoupon.code : null,
+                discountAmount: discountVal,
+                totalPrice: grandTotal,
+                status: 'traitement',
+                createdAt: new Date().toISOString()
+            };
+
+            submitBtn.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            spinner.classList.add('flex');
+
+            userOrdersList.unshift(orderData);
+            saveLocalStorageOrders();
+
+            if (isFirebaseReady && currentUser) {
+                try {
+                    const ordersCollection = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                    await addDoc(ordersCollection, orderData);
+                } catch (error) {}
+            }
+
+            setTimeout(() => {
+                cart = [];
+                appliedCoupon = null;
+                document.getElementById('applied-coupon-badge').classList.add('hidden');
+                updateCartUI(true);
+                closeCheckout();
+                checkoutForm.reset();
+                showToast("Commande enregistrée avec succès !");
+                submitBtn.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                spinner.classList.remove('flex');
+            }, 600);
+        });
+
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 1.6 + 0.4;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+                const colorsArr = ['rgba(0, 243, 255, ', 'rgba(188, 19, 254, ', 'rgba(255, 215, 0, ', 'rgba(255, 255, 255, '];
+                this.colorBase = colorsArr[Math.floor(Math.random() * colorsArr.length)];
+                this.alpha = Math.random();
+                this.alphaChange = (Math.random() * 0.02) + 0.005;
+                this.direction = Math.random() > 0.5 ? 1 : -1;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                this.alpha += this.alphaChange * this.direction;
+                if (this.alpha <= 0.1) {
+                    this.direction = 1;
+                    this.alpha = 0.1;
+                } else if (this.alpha >= 1) {
+                    this.direction = -1;
+                    this.alpha = 1;
+                }
+
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.colorBase + this.alpha + ')';
+                
+                if (this.size > 1.3) {
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = this.colorBase + '1)';
+                } else {
+                    ctx.shadowBlur = 0;
+                }
+                
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(window.innerWidth / 9, 140);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            
+            const gradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height));
+            gradient.addColorStop(0, '#0a081d');
+            gradient.addColorStop(0.6, '#050510');
+            gradient.addColorStop(1, '#020205');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', () => {
+            resizeCanvas();
+            initParticles();
+        });
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderProducts();
+        });
+
+        let toastTimeout;
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const msgEl = document.getElementById('toast-msg');
+            const icon = toast.querySelector('i');
+            
+            msgEl.textContent = message;
+            
+            if (isError) {
+                toast.className = toast.className.replace('border-cyan-500/50', 'border-red-500/50');
+                icon.className = 'fa-solid fa-circle-exclamation text-red-400 text-lg';
+            } else {
+                toast.className = toast.className.replace('border-red-500/50', 'border-cyan-500/50');
+                icon.className = 'fa-solid fa-circle-check text-cyan-400 text-lg';
+            }
+
+            toast.classList.remove('opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 3200);
+        }
+
+        document.getElementById('nav-brand').addEventListener('click', () => {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        window.onload = () => {
+            renderCategories();
+            renderProducts();
+            resizeCanvas();
+            initParticles();
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
