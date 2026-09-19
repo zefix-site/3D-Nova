@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Nova - Catalogue Scintillant & Compte Client</title>
+    <title>3D Nova - Catalogue Scintillant & Panneau Admin</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -43,7 +43,7 @@
 
         /* Panneaux Glassmorphism */
         .glass-panel {
-            background: rgba(20, 20, 35, 0.7);
+            background: rgba(20, 20, 35, 0.75);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border: 1px solid rgba(255, 255, 255, 0.12);
@@ -85,6 +85,17 @@
         .btn-neon:hover {
             box-shadow: 0 0 25px rgba(188, 19, 254, 0.7);
             transform: scale(1.02);
+        }
+
+        .btn-admin {
+            background: linear-gradient(45deg, #f59e0b, #ef4444);
+            color: white;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-admin:hover {
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.7);
+            transform: scale(1.03);
         }
 
         .btn-category {
@@ -158,6 +169,180 @@
             color: #888;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
+        .admin-tab-btn {
+            transition: all 0.3s ease;
+        }
+        .admin-tab-btn.active {
+            background: rgba(0, 243, 255, 0.15);
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        /* ===== NOVA UI REFRESH — VISUEL UNIQUEMENT ===== */
+        :root {
+            --nova-bg: #070812;
+            --nova-surface: rgba(14, 17, 30, .82);
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 15% 10%, rgba(0,243,255,.075), transparent 30%),
+                radial-gradient(circle at 85% 18%, rgba(188,19,254,.085), transparent 32%),
+                radial-gradient(circle at 50% 100%, rgba(255,215,0,.035), transparent 35%),
+                var(--nova-bg);
+        }
+
+        header.glass-panel {
+            background: rgba(5,7,16,.76);
+            border-bottom: 1px solid rgba(255,255,255,.09);
+            box-shadow: 0 14px 40px rgba(0,0,0,.28);
+        }
+
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(20,23,40,.88), rgba(9,12,24,.76));
+            border-color: rgba(255,255,255,.095);
+            box-shadow: 0 18px 50px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.035);
+        }
+
+        .product-card {
+            position: relative;
+            isolation: isolate;
+            border-color: rgba(255,255,255,.085) !important;
+            background: linear-gradient(155deg, rgba(20,24,42,.94), rgba(8,11,23,.90));
+            box-shadow: 0 18px 45px rgba(0,0,0,.22);
+        }
+
+        .product-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: .55;
+            background: radial-gradient(circle at 50% 0%, rgba(0,243,255,.12), transparent 42%);
+            pointer-events: none;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0,243,255,.42) !important;
+            box-shadow: 0 25px 60px rgba(0,0,0,.34), 0 0 30px rgba(0,243,255,.11);
+        }
+
+        .product-card .group {
+            background: #0a0d19;
+        }
+
+        .product-card .group::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 45%, rgba(3,5,12,.78) 100%);
+            pointer-events: none;
+        }
+
+        .product-card .group img {
+            filter: saturate(1.08) contrast(1.03);
+        }
+
+        .product-card .btn-neon {
+            min-width: 126px;
+        }
+
+        .btn-neon {
+            border: 1px solid rgba(255,255,255,.13);
+            background: linear-gradient(135deg, #bc13fe 0%, #693cff 42%, #00cfe0 100%);
+            box-shadow: 0 10px 25px rgba(0,243,255,.14), inset 0 1px 0 rgba(255,255,255,.16);
+        }
+
+        .btn-neon:hover {
+            box-shadow: 0 14px 32px rgba(188,19,254,.28), 0 0 20px rgba(0,243,255,.22);
+        }
+
+        #category-bar { scrollbar-width: none; }
+        #category-bar::-webkit-scrollbar { display:none; }
+
+        /* Admin dashboard */
+        #admin-box {
+            background: linear-gradient(145deg, rgba(17,20,34,.97), rgba(7,9,18,.98));
+            border-color: rgba(245,158,11,.28);
+            box-shadow: 0 30px 90px rgba(0,0,0,.55), 0 0 55px rgba(245,158,11,.08);
+        }
+
+        #admin-dashboard-content .grid.grid-cols-2.md\:grid-cols-4 > .glass-panel {
+            min-height: 108px;
+            transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+        }
+
+        #admin-dashboard-content .grid.grid-cols-2.md\:grid-cols-4 > .glass-panel:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,.22);
+            box-shadow: 0 18px 38px rgba(0,0,0,.28);
+        }
+
+        #admin-tabs-bar {
+            position: sticky;
+            top: 0;
+            z-index: 4;
+            padding: 8px;
+            margin: -4px 0 2px;
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 16px;
+            background: rgba(6,8,17,.72);
+            backdrop-filter: blur(18px);
+        }
+
+        .admin-tab-btn { white-space: nowrap; border-color: transparent !important; }
+
+        .admin-tab-btn.active {
+            background: linear-gradient(135deg, rgba(0,243,255,.16), rgba(188,19,254,.12)) !important;
+            box-shadow: inset 0 0 0 1px rgba(0,243,255,.25), 0 8px 20px rgba(0,0,0,.16) !important;
+        }
+
+        #admin-orders-table-container > .glass-panel {
+            border-left: 3px solid rgba(0,243,255,.35);
+            transition: border-color .2s ease, transform .2s ease, background .2s ease;
+        }
+
+        #admin-orders-table-container > .glass-panel:hover {
+            border-left-color: rgba(245,158,11,.75);
+            transform: translateX(2px);
+            background: linear-gradient(145deg, rgba(24,29,48,.96), rgba(10,13,26,.92));
+        }
+
+        #admin-products-list > .glass-panel {
+            min-height: 96px;
+            background: rgba(255,255,255,.025);
+            transition: transform .2s ease, border-color .2s ease;
+        }
+
+        #admin-products-list > .glass-panel:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0,243,255,.28) !important;
+        }
+
+        #admin-products-list img {
+            width: 76px !important;
+            height: 76px !important;
+            border-radius: 12px !important;
+        }
+
+        #admin-promos-list > .glass-panel {
+            min-height: 78px;
+            background: linear-gradient(145deg, rgba(245,158,11,.075), rgba(255,255,255,.025));
+        }
+
+        #admin-dashboard-content input,
+        #admin-dashboard-content select { min-height: 38px; }
+
+        @media (max-width: 640px) {
+            #admin-box { border-radius: 22px; }
+            .product-card .p-5 { padding: 16px; }
+            .product-card .group { height: 220px; }
+            .product-card .btn-neon { min-width: auto; }
+        }
+
     </style>
 </head>
 <body class="antialiased text-gray-100">
@@ -176,7 +361,13 @@
             </div>
             
             <!-- Navigation Actions -->
-            <div class="flex items-center gap-3 md:gap-4">
+            <div class="flex items-center gap-2 md:gap-3">
+                <!-- Bouton Espace Admin -->
+                <button id="nav-admin-btn" class="p-2.5 rounded-xl glass-panel border-amber-500/40 hover:border-amber-400 transition flex items-center gap-2 text-xs font-bold text-amber-300 shadow-[0_0_10px_rgba(245,158,11,0.2)]">
+                    <i class="fa-solid fa-user-shield text-amber-400 text-sm"></i>
+                    <span class="hidden md:inline">Admin</span>
+                </button>
+
                 <!-- Bouton Mes Commandes -->
                 <button id="nav-orders-btn" class="hidden relative p-2.5 rounded-xl glass-panel hover:border-purple-400 transition flex items-center gap-2 text-xs font-bold text-purple-300">
                     <i class="fa-solid fa-box-open text-purple-400 text-sm"></i>
@@ -234,6 +425,7 @@
             </div>
         </section>
 
+        <!-- Product Grid -->
         <section class="container mx-auto px-4 md:px-6">
             <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
             
@@ -541,8 +733,272 @@
         </div>
     </div>
 
+    <div id="admin-modal" class="fixed inset-0 z-[100] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-3 sm:p-6">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-lg" id="admin-overlay"></div>
+        
+        <div class="relative glass-panel rounded-3xl w-full max-w-5xl p-5 sm:p-8 shadow-[0_0_60px_rgba(245,158,11,0.3)] border border-amber-500/40 transform scale-95 transition-transform duration-300 max-h-[92vh] overflow-y-auto flex flex-col" id="admin-box">
+            <button id="close-admin-btn" class="absolute top-5 right-5 text-gray-400 hover:text-white transition w-9 h-9 rounded-full bg-white/5 flex items-center justify-center z-10">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <!-- Écran de déverrouillage Admin PIN -->
+            <div id="admin-auth-screen" class="py-12 text-center max-w-md mx-auto space-y-5">
+                <div class="w-20 h-20 rounded-2xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center mx-auto text-amber-400 text-3xl shadow-[0_0_30px_rgba(245,158,11,0.4)]">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-black orbitron text-white">Espace Administrateur</h2>
+                    <p class="text-xs text-gray-400 mt-1">Accès réservé à la gestion des commandes, produits et promos.</p>
+                </div>
+                <form id="admin-pass-form" class="space-y-3">
+                    <div class="relative">
+                        <input type="password" id="admin-pin-input" placeholder="Code secret admin (ex: admin123)" class="w-full glass-input text-center tracking-widest text-lg font-mono rounded-xl py-3 px-4">
+                    </div>
+                    <button type="submit" class="w-full btn-admin py-3 rounded-xl font-bold text-xs uppercase tracking-wider">
+                        <i class="fa-solid fa-lock-open mr-2"></i> Déverrouiller le Panneau
+                    </button>
+                    <button type="button" id="admin-quick-access-btn" class="text-xs text-amber-300 hover:underline opacity-80 pt-1">
+                        ⚡ Accès direct Démo
+                    </button>
+                </form>
+            </div>
+
+            <!-- Dashboard Admin déverrouillé -->
+            <div id="admin-dashboard-content" class="hidden space-y-6">
+                <!-- Admin Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/10 pb-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="bg-amber-500 text-black font-extrabold text-[10px] uppercase px-2.5 py-0.5 rounded-md">ADMIN</span>
+                            <h2 class="text-2xl font-black orbitron text-white">Console de Gestion</h2>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-0.5">3D Nova Store • Control Center</p>
+                    </div>
+                    <button id="admin-lock-btn" class="px-3.5 py-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/40 rounded-xl text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock"></i> Verrouiller
+                    </button>
+                </div>
+
+                <!-- Stats Cards Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+                    <div class="glass-panel p-4 rounded-2xl border border-cyan-500/30 bg-cyan-950/20">
+                        <div class="flex items-center justify-between text-cyan-400 mb-1">
+                            <span class="text-[11px] font-bold uppercase tracking-wider">Chiffre d'affaires</span>
+                            <i class="fa-solid fa-sack-dollar text-lg"></i>
+                        </div>
+                        <div id="admin-stat-revenue" class="text-2xl font-black text-white orbitron">0.00 €</div>
+                        <span class="text-[10px] text-gray-400">Total des ventes enregistrées</span>
+                    </div>
+
+                    <div class="glass-panel p-4 rounded-2xl border border-purple-500/30 bg-purple-950/20">
+                        <div class="flex items-center justify-between text-purple-400 mb-1">
+                            <span class="text-[11px] font-bold uppercase tracking-wider">Commandes</span>
+                            <i class="fa-solid fa-box text-lg"></i>
+                        </div>
+                        <div id="admin-stat-orders" class="text-2xl font-black text-white orbitron">0</div>
+                        <span id="admin-stat-pending-orders" class="text-[10px] text-amber-300">0 en traitement</span>
+                    </div>
+
+                    <div class="glass-panel p-4 rounded-2xl border border-amber-500/30 bg-amber-950/20">
+                        <div class="flex items-center justify-between text-amber-400 mb-1">
+                            <span class="text-[11px] font-bold uppercase tracking-wider">Catalogue 3D</span>
+                            <i class="fa-solid fa-cubes text-lg"></i>
+                        </div>
+                        <div id="admin-stat-products" class="text-2xl font-black text-white orbitron">0</div>
+                        <span class="text-[10px] text-gray-400">Objets disponibles</span>
+                    </div>
+
+                    <div class="glass-panel p-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/20">
+                        <div class="flex items-center justify-between text-emerald-400 mb-1">
+                            <span class="text-[11px] font-bold uppercase tracking-wider">Codes Promo</span>
+                            <i class="fa-solid fa-ticket text-lg"></i>
+                        </div>
+                        <div id="admin-stat-coupons" class="text-2xl font-black text-white orbitron">0</div>
+                        <span class="text-[10px] text-gray-400">Coupons actifs</span>
+                    </div>
+                </div>
+
+                <!-- Admin Tabs Navigation -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-1 border-b border-white/10" id="admin-tabs-bar">
+                    <button class="admin-tab-btn active px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border border-white/10 bg-white/5" data-tab="orders">
+                        <i class="fa-solid fa-boxes-stacked"></i> Commandes (<span id="admin-tab-count-orders">0</span>)
+                    </button>
+                    <button class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border border-white/10 bg-white/5 text-gray-300" data-tab="products">
+                        <i class="fa-solid fa-folder-plus"></i> Gestion Produits (<span id="admin-tab-count-products">0</span>)
+                    </button>
+                    <button class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border border-white/10 bg-white/5 text-gray-300" data-tab="promos">
+                        <i class="fa-solid fa-tags"></i> Codes Promo (<span id="admin-tab-count-promos">0</span>)
+                    </button>
+                    <button class="admin-tab-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2 border border-white/10 bg-white/5 text-gray-300" data-tab="stats">
+                        <i class="fa-solid fa-chart-line"></i> Statistiques
+                    </button>
+                </div>
+
+                <!-- TAB 1: GESTION DES COMMANDES -->
+                <div id="admin-tab-orders" class="admin-tab-content space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                        <h3 class="text-sm font-bold text-cyan-300 uppercase tracking-wider">
+                            <i class="fa-solid fa-list-check mr-1.5"></i> Suivi des commandes clients
+                        </h3>
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <select id="admin-filter-order-status" class="glass-input px-3 py-1.5 rounded-xl text-xs text-white bg-slate-900 flex-1 sm:flex-initial">
+                                <option value="all">Tous les statuts</option>
+                                <option value="traitement">En traitement</option>
+                                <option value="creation">En cours de création</option>
+                                <option value="pret">Prêt & Livraison</option>
+                                <option value="terminee">Terminée</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="admin-orders-table-container" class="space-y-4 max-h-[50vh] overflow-y-auto pr-1">
+                        <!-- Inséré dynamiquement -->
+                    </div>
+                </div>
+
+                <!-- TAB 2: GESTION DES PRODUITS (AJOUT / EDIT / SUPPRESSION) -->
+                <div id="admin-tab-products" class="admin-tab-content hidden space-y-6">
+                    <div class="glass-panel p-5 rounded-2xl border border-purple-500/30 bg-purple-950/10">
+                        <h3 class="text-sm font-bold text-purple-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-plus-circle text-lg"></i> Ajouter un nouvel objet 3D au catalogue
+                        </h3>
+                        <form id="admin-add-product-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Nom du produit *</label>
+                                <input type="text" id="new-p-name" required placeholder="Ex: Figurine Robot Cyber" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Catégorie *</label>
+                                <select id="new-p-category" required class="w-full glass-input px-3 py-2 rounded-xl text-xs bg-slate-900">
+                                    <option value="animaux">Animaux</option>
+                                    <option value="deco">Déco Intérieur</option>
+                                    <option value="noel">Noël</option>
+                                    <option value="evenement">Anniversaire & Mariage</option>
+                                    <option value="gaming">Gaming</option>
+                                    <option value="accessoire">Accessoires</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Prix de base (€) *</label>
+                                <input type="number" step="0.10" id="new-p-price" required placeholder="14.90" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">URL de l'image *</label>
+                                <input type="url" id="new-p-image" required placeholder="https://..." class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Badge spécial (Optionnel)</label>
+                                <input type="text" id="new-p-badge" placeholder="Ex: Top Ventes, Nouveau, Premium" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                            </div>
+                            <div class="sm:col-span-2 md:col-span-3">
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Description *</label>
+                                <input type="text" id="new-p-desc" required placeholder="Brève description du modèle 3D..." class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                            </div>
+                            <div class="sm:col-span-2 md:col-span-3 pt-2">
+                                <button type="submit" class="w-full btn-neon py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> Publier dans le Catalogue
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-bold text-cyan-300 uppercase tracking-wider mb-3">
+                            <i class="fa-solid fa-cubes mr-1.5"></i> Produits actuellement en ligne
+                        </h3>
+                        <div id="admin-products-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[40vh] overflow-y-auto pr-1">
+                            <!-- Inséré dynamiquement -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: CODES PROMO -->
+                <div id="admin-tab-promos" class="admin-tab-content hidden space-y-6">
+                    <div class="glass-panel p-5 rounded-2xl border border-amber-500/30 bg-amber-950/10">
+                        <h3 class="text-sm font-bold text-amber-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                            <i class="fa-solid fa-ticket text-lg"></i> Créer un nouveau Code Promo
+                        </h3>
+                        <form id="admin-add-coupon-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Code Promo *</label>
+                                <input type="text" id="new-c-code" required placeholder="Ex: VIP20" class="w-full glass-input px-3 py-2 rounded-xl text-xs uppercase font-mono">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Type de réduction *</label>
+                                <select id="new-c-type" required class="w-full glass-input px-3 py-2 rounded-xl text-xs bg-slate-900">
+                                    <option value="percent">Pourcentage (%)</option>
+                                    <option value="fixed">Montant fixe (€)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Valeur *</label>
+                                <input type="number" step="0.5" id="new-c-val" required placeholder="20" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Description *</label>
+                                <input type="text" id="new-c-desc" required placeholder="-20% de remise" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                            </div>
+                            <div class="sm:col-span-2 md:col-span-4 pt-1">
+                                <button type="submit" class="w-full py-2.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-check"></i> Activer le Code Promo
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-bold text-amber-300 uppercase tracking-wider mb-3">
+                            <i class="fa-solid fa-list mr-1.5"></i> Codes Promo actifs
+                        </h3>
+                        <div id="admin-promos-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <!-- Inséré dynamiquement -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: STATISTIQUES & ANALYTICS -->
+                <div id="admin-tab-stats" class="admin-tab-content hidden space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="glass-panel p-5 rounded-2xl border border-white/10 space-y-3">
+                            <h4 class="text-xs font-bold text-cyan-300 uppercase tracking-wider">
+                                <i class="fa-solid fa-pie-chart mr-1"></i> Répartition des objets commandés
+                            </h4>
+                            <div id="admin-stats-categories-list" class="space-y-2 text-xs">
+                                <!-- Dynamique -->
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-5 rounded-2xl border border-white/10 space-y-3">
+                            <h4 class="text-xs font-bold text-purple-300 uppercase tracking-wider">
+                                <i class="fa-solid fa-circle-info mr-1"></i> Synthèse de la boutique
+                            </h4>
+                            <div class="text-xs space-y-2 text-gray-300">
+                                <div class="flex justify-between border-b border-white/5 pb-1.5">
+                                    <span>Valeur moyenne par commande :</span>
+                                    <strong id="stat-avg-order-val" class="text-white">0.00 €</strong>
+                                </div>
+                                <div class="flex justify-between border-b border-white/5 pb-1.5">
+                                    <span>Produit le plus populaire :</span>
+                                    <strong id="stat-top-product" class="text-cyan-300">---</strong>
+                                </div>
+                                <div class="flex justify-between border-b border-white/5 pb-1.5">
+                                    <span>Taux de conversion promo :</span>
+                                    <strong id="stat-promo-usage" class="text-amber-300">0%</strong>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Statut Firebase Cloud :</span>
+                                    <span id="stat-firebase-status" class="text-emerald-400 font-bold">Actif / Autonome</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-panel border border-cyan-500/50 px-6 py-3 rounded-full text-white shadow-[0_0_25px_rgba(0,243,255,0.4)] flex items-center gap-3 opacity-0 pointer-events-none transition-all duration-300 z-[90]">
+    <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-panel border border-cyan-500/50 px-6 py-3 rounded-full text-white shadow-[0_0_25px_rgba(0,243,255,0.4)] flex items-center gap-3 opacity-0 pointer-events-none transition-all duration-300 z-[120]">
         <i class="fa-solid fa-circle-check text-cyan-400 text-lg"></i>
         <span id="toast-msg" class="text-xs sm:text-sm font-semibold">Message Toast</span>
     </div>
@@ -562,13 +1018,14 @@
             collection, 
             addDoc, 
             updateDoc, 
+            deleteDoc,
             doc, 
             setDoc,
             getDoc,
             onSnapshot 
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Configuration Firebase avec secours autonome LocalStorage pour VS Code & GitHub Pages
+        // Configuration Firebase
         const defaultFirebaseConfig = {
             apiKey: "AIzaSyAa0yiYfzvibsdxc0e2z_d8YG_jzaTTp-Y",
             authDomain: "d-nova-64d2e.firebaseapp.com",
@@ -586,6 +1043,9 @@
         let favorites = [];
         let coupons = {};
         let products = [];
+        let isAdminUnlocked = false;
+
+        const ADMIN_PIN_CODE = "admin123";
 
         const initialCategories = [
             { id: 'all', name: 'Tous les objets', icon: 'fa-border-all' },
@@ -660,7 +1120,6 @@
             isFirebaseReady = false;
         }
 
-        // Auto-chargement LocalStorage au démarrage (Secours hors ligne / GitHub Pages)
         function loadLocalStorageData() {
             try {
                 const storedCart = localStorage.getItem('3dnova_cart');
@@ -677,27 +1136,38 @@
 
                 const storedOrders = localStorage.getItem('3dnova_orders');
                 if (storedOrders) userOrdersList = JSON.parse(storedOrders);
+
+                const storedProds = localStorage.getItem('3dnova_products');
+                if (storedProds) products = JSON.parse(storedProds);
+                else products = [...initialProducts];
+
+                const storedCoupons = localStorage.getItem('3dnova_coupons');
+                if (storedCoupons) coupons = JSON.parse(storedCoupons);
+                else coupons = { ...initialPromoCodes };
+
             } catch(e) {
                 console.error("Erreur de lecture LocalStorage", e);
             }
         }
 
+        function saveLocalStorageProducts() {
+            try { localStorage.setItem('3dnova_products', JSON.stringify(products)); } catch(e){}
+        }
+
+        function saveLocalStorageCoupons() {
+            try { localStorage.setItem('3dnova_coupons', JSON.stringify(coupons)); } catch(e){}
+        }
+
         function saveLocalStorageCart() {
-            try {
-                localStorage.setItem('3dnova_cart', JSON.stringify(cart));
-            } catch(e){}
+            try { localStorage.setItem('3dnova_cart', JSON.stringify(cart)); } catch(e){}
         }
 
         function saveLocalStorageFavs() {
-            try {
-                localStorage.setItem('3dnova_favs', JSON.stringify(favorites));
-            } catch(e){}
+            try { localStorage.setItem('3dnova_favs', JSON.stringify(favorites)); } catch(e){}
         }
 
         function saveLocalStorageOrders() {
-            try {
-                localStorage.setItem('3dnova_orders', JSON.stringify(userOrdersList));
-            } catch(e){}
+            try { localStorage.setItem('3dnova_orders', JSON.stringify(userOrdersList)); } catch(e){}
         }
 
         function saveLocalStorageUser() {
@@ -711,8 +1181,6 @@
             initAuthAndData();
         } else {
             loadLocalStorageData();
-            products = [...initialProducts];
-            coupons = { ...initialPromoCodes };
             updateCartUI(false);
             updateAuthUI();
         }
@@ -721,11 +1189,8 @@
             try {
                 await signInAnonymously(auth);
             } catch (e) {
-                console.warn("Connexion anonyme échouée, passage en mode local:", e);
                 isFirebaseReady = false;
                 loadLocalStorageData();
-                products = [...initialProducts];
-                coupons = { ...initialPromoCodes };
                 updateCartUI(false);
                 updateAuthUI();
                 return;
@@ -746,9 +1211,7 @@
                             if (docSnap.exists()) {
                                 userProfileData = docSnap.data();
                             }
-                        } catch (e) {
-                            console.warn("Impossible de récupérer le profil:", e);
-                        }
+                        } catch (e) {}
                     }
                     updateAuthUI();
                     loadUserOrders();
@@ -773,9 +1236,11 @@
                     });
                     products = fetched;
                 }
+                saveLocalStorageProducts();
                 renderProducts();
+                if (isAdminUnlocked) renderAdminProducts();
             }, () => {
-                products = [...initialProducts];
+                loadLocalStorageData();
                 renderProducts();
             });
         }
@@ -797,8 +1262,10 @@
                     });
                     coupons = loaded;
                 }
+                saveLocalStorageCoupons();
+                if (isAdminUnlocked) renderAdminPromos();
             }, () => {
-                coupons = { ...initialPromoCodes };
+                loadLocalStorageData();
             });
         }
 
@@ -929,8 +1396,9 @@
                 const favHeartClass = isFav ? 'fa-solid fa-heart text-pink-500' : 'fa-regular fa-heart text-white/70 hover:text-pink-400';
 
                 card.innerHTML = `
-                    <div class="relative h-52 overflow-hidden group">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="relative h-56 overflow-hidden group">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://placehold.co/600x400/101020/00f3ff?text=Objet+3D'">
+                        <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-black/35 to-transparent pointer-events-none"></div>
                         <span class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-gray-300 text-[11px] px-2.5 py-0.5 rounded-md border border-white/10">
                             <i class="fa-solid ${catObj ? catObj.icon : 'fa-tag'} mr-1 text-cyan-400"></i> ${catObj ? catObj.name : product.category}
                         </span>
@@ -946,7 +1414,7 @@
                         <div class="flex items-center justify-between pt-3 border-t border-white/10 mt-auto">
                             <div>
                                 <span class="text-[10px] text-gray-400 block uppercase tracking-wider">À partir de</span>
-                                <span class="text-xl font-black text-cyan-300">${product.basePrice.toFixed(2)} €</span>
+                                <span class="text-xl font-black text-cyan-300">${Number(product.basePrice).toFixed(2)} €</span>
                             </div>
                             <button class="configure-btn btn-neon px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5" data-id="${product.id}">
                                 <i class="fa-solid fa-sliders"></i> Personnaliser
@@ -1480,8 +1948,6 @@
         ];
 
         function loadUserOrders() {
-            const container = document.getElementById('orders-list-container');
-
             if (!isFirebaseReady || !currentUser || currentUser.isAnonymous) {
                 renderOrdersList(userOrdersList);
                 return;
@@ -1555,7 +2021,7 @@
                 card.innerHTML = `
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-white/10 pb-3 gap-2">
                         <div>
-                            <span class="text-xs font-mono font-bold text-cyan-300">N° ${order.id ? order.id.slice(0, 8) : 'COMMANDE'}</span>
+                            <span class="text-xs font-mono font-bold text-cyan-300">N° ${order.id ? order.id.slice(0, 10) : 'COMMANDE'}</span>
                             <span class="text-[10px] text-gray-400 block">${formattedDate}</span>
                         </div>
                         <div class="flex items-center gap-2">
@@ -1582,33 +2048,11 @@
                             </div>
                         `).join('')}
                     </div>
-
-                    <div class="pt-2 flex justify-end items-center gap-2 text-[10px]">
-                        <span class="text-gray-500">Modifier l'étape :</span>
-                        <select class="glass-input px-2 py-1 rounded-lg text-[10px] text-cyan-300 bg-slate-900 cursor-pointer" onchange="window.updateOrderStatus('${order.id}', this.value)">
-                            ${ORDER_STATUS_STEPS.map(s => `<option value="${s.key}" ${s.key === currentStatus ? 'selected' : ''}>${s.label}</option>`).join('')}
-                        </select>
-                    </div>
                 `;
 
                 container.appendChild(card);
             });
         }
-
-        window.updateOrderStatus = async function(orderId, newStatus) {
-            const target = userOrdersList.find(o => o.id === orderId);
-            if (target) target.status = newStatus;
-            saveLocalStorageOrders();
-            renderOrdersList(userOrdersList);
-
-            if (isFirebaseReady) {
-                try {
-                    const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderId);
-                    await updateDoc(orderRef, { status: newStatus, updatedAt: new Date().toISOString() });
-                } catch (err) {}
-            }
-            showToast("Statut mis à jour !");
-        };
 
         const cartModal = document.getElementById('cart-modal');
         const cartDrawer = document.getElementById('cart-drawer');
@@ -1715,7 +2159,7 @@
             const grandTotal = Math.max(0, subtotal - discountVal);
 
             const orderData = {
-                id: 'ORD-' + Math.random().toString(36).substr(2, 9),
+                id: 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
                 client: { prenom, nom, email },
                 userId: currentUser ? currentUser.uid : 'anonymous',
                 items: cart.map(item => ({
@@ -1762,6 +2206,415 @@
                 spinner.classList.add('hidden');
                 spinner.classList.remove('flex');
             }, 600);
+        });
+
+        const adminModal = document.getElementById('admin-modal');
+        const adminBox = document.getElementById('admin-box');
+        const adminAuthScreen = document.getElementById('admin-auth-screen');
+        const adminDashboardContent = document.getElementById('admin-dashboard-content');
+
+        function openAdminModal() {
+            adminModal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            setTimeout(() => {
+                adminModal.classList.remove('opacity-0');
+                adminBox.classList.remove('scale-95');
+            }, 10);
+
+            if (isAdminUnlocked) {
+                showAdminDashboard();
+            } else {
+                adminAuthScreen.classList.remove('hidden');
+                adminDashboardContent.classList.add('hidden');
+            }
+        }
+
+        function closeAdminModal() {
+            adminModal.classList.add('opacity-0');
+            adminBox.classList.add('scale-95');
+            setTimeout(() => {
+                adminModal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        document.getElementById('nav-admin-btn').addEventListener('click', openAdminModal);
+        document.getElementById('close-admin-btn').addEventListener('click', closeAdminModal);
+        document.getElementById('admin-overlay').addEventListener('click', closeAdminModal);
+
+        document.getElementById('admin-pass-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pin = document.getElementById('admin-pin-input').value.trim();
+            if (pin === ADMIN_PIN_CODE || pin === "admin") {
+                unlockAdmin();
+            } else {
+                showToast("Code PIN incorrect (Code par défaut: admin123)", true);
+            }
+        });
+
+        document.getElementById('admin-quick-access-btn').addEventListener('click', () => {
+            unlockAdmin();
+        });
+
+        function unlockAdmin() {
+            isAdminUnlocked = true;
+            showAdminDashboard();
+            showToast("Accès Administrateur déverrouillé 🔓");
+        }
+
+        document.getElementById('admin-lock-btn').addEventListener('click', () => {
+            isAdminUnlocked = false;
+            adminAuthScreen.classList.remove('hidden');
+            adminDashboardContent.classList.add('hidden');
+            showToast("Panneau Admin verrouillé");
+        });
+
+        function showAdminDashboard() {
+            adminAuthScreen.classList.add('hidden');
+            adminDashboardContent.classList.remove('hidden');
+            loadAdminData();
+        }
+
+        let adminAllOrders = [];
+
+        function loadAdminData() {
+            // Synchroniser toutes les commandes
+            if (isFirebaseReady) {
+                try {
+                    const ordersCol = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                    onSnapshot(ordersCol, (snapshot) => {
+                        const fetched = [];
+                        snapshot.forEach(d => fetched.push({ id: d.id, ...d.data() }));
+                        fetched.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        adminAllOrders = fetched;
+                        refreshAdminUI();
+                    }, () => {
+                        adminAllOrders = [...userOrdersList];
+                        refreshAdminUI();
+                    });
+                } catch(e) {
+                    adminAllOrders = [...userOrdersList];
+                    refreshAdminUI();
+                }
+            } else {
+                adminAllOrders = [...userOrdersList];
+                refreshAdminUI();
+            }
+        }
+
+        function refreshAdminUI() {
+            renderAdminStats();
+            renderAdminOrders();
+            renderAdminProducts();
+            renderAdminPromos();
+            renderAdminAnalytics();
+        }
+
+        function renderAdminStats() {
+            const totalRevenue = adminAllOrders.reduce((sum, o) => sum + (o.totalPrice || 0), 0);
+            const pendingCount = adminAllOrders.filter(o => o.status === 'traitement' || o.status === 'creation').length;
+
+            document.getElementById('admin-stat-revenue').textContent = `${totalRevenue.toFixed(2)} €`;
+            document.getElementById('admin-stat-orders').textContent = adminAllOrders.length;
+            document.getElementById('admin-stat-pending-orders').textContent = `${pendingCount} en fabrication / attente`;
+            
+            const prodList = products.length ? products : initialProducts;
+            document.getElementById('admin-stat-products').textContent = prodList.length;
+
+            const couponCount = Object.keys(coupons).length;
+            document.getElementById('admin-stat-coupons').textContent = couponCount;
+
+            document.getElementById('admin-tab-count-orders').textContent = adminAllOrders.length;
+            document.getElementById('admin-tab-count-products').textContent = prodList.length;
+            document.getElementById('admin-tab-count-promos').textContent = couponCount;
+        }
+
+        function renderAdminOrders() {
+            const container = document.getElementById('admin-orders-table-container');
+            const filterStatus = document.getElementById('admin-filter-order-status').value;
+            container.innerHTML = '';
+
+            const filteredOrders = adminAllOrders.filter(o => {
+                if (filterStatus === 'all') return true;
+                return (o.status || 'traitement') === filterStatus;
+            });
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-gray-500 py-8 glass-panel rounded-2xl">
+                        <i class="fa-solid fa-inbox text-4xl mb-2 opacity-50"></i>
+                        <p class="text-xs">Aucune commande ne correspond à ce filtre.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredOrders.forEach(order => {
+                const card = document.createElement('div');
+                card.className = "glass-panel p-4 rounded-2xl border border-white/10 space-y-3";
+
+                const formattedDate = new Date(order.createdAt).toLocaleDateString('fr-FR', {
+                    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                card.innerHTML = `
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b border-white/10 pb-2">
+                        <div>
+                            <span class="text-xs font-mono font-bold text-amber-300">N° ${order.id}</span>
+                            <span class="text-[10px] text-gray-400 block">Client: <strong>${order.client?.prenom || ''} ${order.client?.nom || ''}</strong> (${order.client?.email || 'N/A'})</span>
+                            <span class="text-[10px] text-gray-500">${formattedDate}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-black text-cyan-300">${order.totalPrice ? order.totalPrice.toFixed(2) : '0.00'} €</span>
+                            <button class="text-red-400 hover:text-red-300 text-xs px-2 py-1 rounded bg-red-500/10 border border-red-500/20" onclick="window.deleteAdminOrder('${order.id}')" title="Supprimer la commande">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                        <div class="space-y-1">
+                            <span class="text-[10px] text-gray-400 uppercase font-bold">Articles :</span>
+                            ${order.items.map(it => `
+                                <div class="bg-white/5 p-1.5 rounded-lg text-[11px] flex justify-between">
+                                    <span>${it.quantity}x <strong>${it.name}</strong> (${it.size}) - ${it.color}</span>
+                                    <span class="font-semibold text-purple-300">${(it.unitPrice * it.quantity).toFixed(2)}€</span>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex flex-col justify-between space-y-2 bg-black/40 p-2.5 rounded-xl border border-white/5">
+                            <div class="flex justify-between items-center">
+                                <span class="text-[11px] font-bold text-amber-300">Statut de la commande :</span>
+                                <select class="glass-input px-2.5 py-1 rounded-lg text-xs font-bold text-cyan-300 bg-slate-900 cursor-pointer" onchange="window.updateOrderStatus('${order.id}', this.value)">
+                                    ${ORDER_STATUS_STEPS.map(s => `<option value="${s.key}" ${s.key === (order.status || 'traitement') ? 'selected' : ''}>${s.label}</option>`).join('')}
+                                </select>
+                            </div>
+                            ${order.coupon ? `<div class="text-[10px] text-amber-300">🎟️ Code Promo appliqué: <strong>${order.coupon}</strong> (-${order.discountAmount ? order.discountAmount.toFixed(2) : '0'}€)</div>` : ''}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.getElementById('admin-filter-order-status').addEventListener('change', renderAdminOrders);
+
+        window.deleteAdminOrder = async function(orderId) {
+            adminAllOrders = adminAllOrders.filter(o => o.id !== orderId);
+            userOrdersList = userOrdersList.filter(o => o.id !== orderId);
+            saveLocalStorageOrders();
+            refreshAdminUI();
+
+            if (isFirebaseReady) {
+                try {
+                    const ref = doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderId);
+                    await deleteDoc(ref);
+                } catch(e){}
+            }
+            showToast("Commande supprimée.");
+        };
+
+        function renderAdminProducts() {
+            const container = document.getElementById('admin-products-list');
+            container.innerHTML = '';
+
+            const prodList = products.length ? products : initialProducts;
+
+            prodList.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = "glass-panel p-3 rounded-2xl border border-white/10 flex gap-3 items-center relative group";
+
+                const catObj = initialCategories.find(c => c.id === prod.category);
+                card.innerHTML = `
+                    <div class="relative shrink-0">
+                        <img src="${prod.image}" alt="${prod.name}" class="w-14 h-14 object-cover rounded-xl border border-white/10 shadow-lg" onerror="this.src='https://placehold.co/100x100/101020/00f3ff?text=3D'">
+                        ${prod.badge ? `<span class="absolute -top-2 -left-2 text-[8px] font-black uppercase px-1.5 py-0.5 rounded-full bg-cyan-400 text-slate-950">${prod.badge}</span>` : ''}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-1.5 mb-1">
+                            <span class="text-[9px] text-cyan-300 uppercase tracking-wider font-bold">
+                                <i class="fa-solid ${catObj ? catObj.icon : 'fa-cube'} mr-1"></i>${catObj ? catObj.name : prod.category}
+                            </span>
+                        </div>
+                        <h4 class="text-xs font-bold text-white truncate orbitron">${prod.name}</h4>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="text-[11px] text-cyan-300 font-black">${Number(prod.basePrice).toFixed(2)} €</span>
+                            <span class="text-[9px] text-gray-500">•</span>
+                            <span class="text-[9px] text-gray-500">ID ${prod.id}</span>
+                        </div>
+                    </div>
+                    <button class="shrink-0 text-red-400 hover:text-white text-xs w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/25 border border-red-500/15 transition" onclick="window.deleteAdminProduct('${prod.id}')" title="Supprimer du catalogue">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.getElementById('admin-add-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('new-p-name').value.trim();
+            const category = document.getElementById('new-p-category').value;
+            const basePrice = parseFloat(document.getElementById('new-p-price').value);
+            const image = document.getElementById('new-p-image').value.trim();
+            const badge = document.getElementById('new-p-badge').value.trim() || null;
+            const description = document.getElementById('new-p-desc').value.trim();
+
+            const newProd = {
+                id: 'prod-' + Date.now(),
+                name, category, basePrice, image, badge, description
+            };
+
+            products.push(newProd);
+            saveLocalStorageProducts();
+            renderProducts();
+            refreshAdminUI();
+
+            if (isFirebaseReady) {
+                try {
+                    const prodRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', newProd.id);
+                    await setDoc(prodRef, newProd);
+                } catch(e){}
+            }
+
+            e.target.reset();
+            showToast(`Nouveau produit "${name}" ajouté au catalogue !`);
+        });
+
+        window.deleteAdminProduct = async function(productId) {
+            products = products.filter(p => p.id !== productId);
+            saveLocalStorageProducts();
+            renderProducts();
+            refreshAdminUI();
+
+            if (isFirebaseReady) {
+                try {
+                    const ref = doc(db, 'artifacts', appId, 'public', 'data', 'products', productId);
+                    await deleteDoc(ref);
+                } catch(e){}
+            }
+            showToast("Produit supprimé du catalogue.");
+        };
+
+        function renderAdminPromos() {
+            const container = document.getElementById('admin-promos-list');
+            container.innerHTML = '';
+
+            for (const [code, info] of Object.entries(coupons)) {
+                const card = document.createElement('div');
+                card.className = "glass-panel p-3 rounded-xl border border-amber-500/30 bg-amber-950/10 flex justify-between items-center";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="font-mono font-bold text-amber-300 text-xs">${code}</div>
+                        <div class="text-[10px] text-gray-300">${info.desc}</div>
+                    </div>
+                    <button class="text-red-400 hover:text-red-300 text-xs p-1.5" onclick="window.deleteAdminPromo('${code}')" title="Supprimer">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                    </button>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        document.getElementById('admin-add-coupon-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = document.getElementById('new-c-code').value.trim().toUpperCase();
+            const type = document.getElementById('new-c-type').value;
+            const val = parseFloat(document.getElementById('new-c-val').value);
+            const desc = document.getElementById('new-c-desc').value.trim();
+
+            coupons[code] = { type, val, desc };
+            saveLocalStorageCoupons();
+            refreshAdminUI();
+
+            if (isFirebaseReady) {
+                try {
+                    const cRef = doc(db, 'artifacts', appId, 'public', 'data', 'coupons', code);
+                    await setDoc(cRef, { type, val, desc });
+                } catch(e){}
+            }
+
+            e.target.reset();
+            showToast(`Code Promo ${code} créé !`);
+        });
+
+        window.deleteAdminPromo = async function(code) {
+            delete coupons[code];
+            saveLocalStorageCoupons();
+            refreshAdminUI();
+
+            if (isFirebaseReady) {
+                try {
+                    const ref = doc(db, 'artifacts', appId, 'public', 'data', 'coupons', code);
+                    await deleteDoc(ref);
+                } catch(e){}
+            }
+            showToast(`Code Promo ${code} supprimé.`);
+        };
+
+        function renderAdminAnalytics() {
+            const catContainer = document.getElementById('admin-stats-categories-list');
+            catContainer.innerHTML = '';
+
+            const counts = {};
+            let totalItemsSold = 0;
+            let promoCount = 0;
+
+            adminAllOrders.forEach(order => {
+                if (order.coupon) promoCount++;
+                order.items.forEach(it => {
+                    const p = products.find(prod => prod.id === it.productId);
+                    const cat = p ? p.category : '3D';
+                    counts[cat] = (counts[cat] || 0) + it.quantity;
+                    totalItemsSold += it.quantity;
+                });
+            });
+
+            if (totalItemsSold === 0) {
+                catContainer.innerHTML = '<span class="text-gray-500 italic">Aucune vente enregistrée pour le moment.</span>';
+            } else {
+                for (const [cat, qty] of Object.entries(counts)) {
+                    const catObj = initialCategories.find(c => c.id === cat);
+                    const pct = Math.round((qty / totalItemsSold) * 100);
+                    const row = document.createElement('div');
+                    row.className = "space-y-1";
+                    row.innerHTML = `
+                        <div class="flex justify-between text-[11px]">
+                            <span><i class="fa-solid ${catObj ? catObj.icon : 'fa-cube'} text-cyan-400 mr-1"></i> ${catObj ? catObj.name : cat}</span>
+                            <span class="font-bold text-white">${qty} unités (${pct}%)</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <div class="h-full bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full" style="width: ${pct}%"></div>
+                        </div>
+                    `;
+                    catContainer.appendChild(row);
+                }
+            }
+
+            const avgVal = adminAllOrders.length ? (adminAllOrders.reduce((s,o)=>s+o.totalPrice,0)/adminAllOrders.length) : 0;
+            document.getElementById('stat-avg-order-val').textContent = `${avgVal.toFixed(2)} €`;
+
+            const promoPct = adminAllOrders.length ? Math.round((promoCount / adminAllOrders.length) * 100) : 0;
+            document.getElementById('stat-promo-usage').textContent = `${promoPct}% (${promoCount} commandes)`;
+        }
+
+        // Switching Admin Tabs
+        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.admin-tab-btn').forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.add('text-gray-300');
+                });
+                const target = e.currentTarget;
+                target.classList.add('active');
+                target.classList.remove('text-gray-300');
+
+                const tabName = target.getAttribute('data-tab');
+                document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.add('hidden'));
+                document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden');
+            });
         });
 
         const canvas = document.getElementById('sparkle-canvas');
