@@ -431,7 +431,7 @@
             
             <div id="no-products" class="hidden text-center py-16 glass-panel rounded-2xl">
                 <i class="fa-solid fa-ghost text-5xl text-gray-500 mb-4"></i>
-                <p class="text-gray-400 text-lg">Aucun produit ne correspond à cette recherche.</p>
+                <p class="text-gray-400 text-lg">Aucun produit n’est disponible pour le moment ou aucun produit ne correspond à cette recherche.</p>
             </div>
         </section>
     </main>
@@ -862,42 +862,75 @@
                         <h3 class="text-sm font-bold text-purple-300 uppercase tracking-wider mb-3 flex items-center gap-2">
                             <i class="fa-solid fa-plus-circle text-lg"></i> Ajouter un nouvel objet 3D au catalogue
                         </h3>
-                        <form id="admin-add-product-form" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Nom du produit *</label>
-                                <input type="text" id="new-p-name" required placeholder="Ex: Figurine Robot Cyber" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                        <form id="admin-add-product-form" class="space-y-5">
+                            <input type="hidden" id="editing-product-id" value="">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Nom du produit *</label>
+                                    <input type="text" id="new-p-name" required placeholder="Ex: Figurine Robot Cyber" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Catégorie *</label>
+                                    <select id="new-p-category" required class="w-full glass-input px-3 py-2 rounded-xl text-xs bg-slate-900">
+                                        <option value="animaux">Animaux</option><option value="deco">Déco Intérieur</option><option value="noel">Noël</option><option value="evenement">Anniversaire & Mariage</option><option value="gaming">Gaming</option><option value="accessoire">Accessoires</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Prix de base (€) *</label>
+                                    <input type="number" step="0.01" min="0" id="new-p-price" required placeholder="14.90" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">URL de l'image *</label>
+                                    <input type="url" id="new-p-image" required placeholder="https://..." class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Badge</label>
+                                    <input type="text" id="new-p-badge" placeholder="Nouveau, Premium..." class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+                                </div>
+                                <div class="sm:col-span-2 md:col-span-3">
+                                    <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Description *</label>
+                                    <textarea id="new-p-desc" required rows="2" placeholder="Description complète du produit..." class="w-full glass-input px-3 py-2 rounded-xl text-xs resize-y"></textarea>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Catégorie *</label>
-                                <select id="new-p-category" required class="w-full glass-input px-3 py-2 rounded-xl text-xs bg-slate-900">
-                                    <option value="animaux">Animaux</option>
-                                    <option value="deco">Déco Intérieur</option>
-                                    <option value="noel">Noël</option>
-                                    <option value="evenement">Anniversaire & Mariage</option>
-                                    <option value="gaming">Gaming</option>
-                                    <option value="accessoire">Accessoires</option>
-                                </select>
+
+                            <div class="p-4 rounded-2xl border border-cyan-500/20 bg-cyan-950/10">
+                                <div class="flex items-center justify-between mb-3">
+                                    <div><h4 class="text-xs font-black text-cyan-300 uppercase">Tailles et prix</h4><p class="text-[10px] text-gray-400">Active les tailles disponibles et définis un prix précis pour chacune.</p></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                    <div class="p-3 rounded-xl bg-black/20 border border-white/10"><label class="flex items-center gap-2 text-xs font-bold mb-2"><input type="checkbox" id="size-S-enabled" checked class="accent-cyan-400"> Petit</label><input id="size-S-name" value="Petit" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px] mb-2"><input id="size-S-dimension" value="5 cm" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px] mb-2"><input type="number" min="0" step="0.01" id="size-S-price" placeholder="Prix (€)" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px]"></div>
+                                    <div class="p-3 rounded-xl bg-black/20 border border-white/10"><label class="flex items-center gap-2 text-xs font-bold mb-2"><input type="checkbox" id="size-M-enabled" checked class="accent-cyan-400"> Moyen</label><input id="size-M-name" value="Moyen" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px] mb-2"><input id="size-M-dimension" value="10 cm" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px] mb-2"><input type="number" min="0" step="0.01" id="size-M-price" placeholder="Prix (€)" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px]"></div>
+                                    <div class="p-3 rounded-xl bg-black/20 border border-white/10"><label class="flex items-center gap-2 text-xs font-bold mb-2"><input type="checkbox" id="size-L-enabled" checked class="accent-cyan-400"> Grand</label><input id="size-L-name" value="Grand" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px] mb-2"><input id="size-L-dimension" value="15 cm" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px] mb-2"><input type="number" min="0" step="0.01" id="size-L-price" placeholder="Prix (€)" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px]"></div>
+                                    <div class="p-3 rounded-xl bg-black/20 border border-white/10"><label class="flex items-center gap-2 text-xs font-bold mb-2"><input type="checkbox" id="size-XL-enabled" checked class="accent-cyan-400"> Géant</label><input id="size-XL-name" value="Géant" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px] mb-2"><input id="size-XL-dimension" value="20 cm" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px] mb-2"><input type="number" min="0" step="0.01" id="size-XL-price" placeholder="Prix (€)" class="w-full glass-input px-2 py-1.5 rounded-lg text-[10px]"></div>
+                                </div>
+                                <p class="text-[10px] text-gray-500 mt-2">Si un prix de taille est laissé vide, le prix de base sera utilisé.</p>
                             </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Prix de base (€) *</label>
-                                <input type="number" step="0.10" id="new-p-price" required placeholder="14.90" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+
+                            <div class="p-4 rounded-2xl border border-purple-500/20 bg-purple-950/10">
+                                <div class="flex items-center justify-between mb-3"><div><h4 class="text-xs font-black text-purple-300 uppercase">Couleurs disponibles</h4><p class="text-[10px] text-gray-400">Coche uniquement les couleurs que tu proposes pour ce produit.</p></div></div>
+                                <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+                                    <label class="flex items-center gap-2 text-[10px] p-2 rounded-lg border border-white/10"><input type="checkbox" class="product-color-option accent-purple-400" data-color-id="gold"> Or Soyeux</label>
+                                    <label class="flex items-center gap-2 text-[10px] p-2 rounded-lg border border-white/10"><input type="checkbox" class="product-color-option accent-purple-400" data-color-id="cyan"> Néon Cyan</label>
+                                    <label class="flex items-center gap-2 text-[10px] p-2 rounded-lg border border-white/10"><input type="checkbox" class="product-color-option accent-purple-400" data-color-id="purple"> Violet Néon</label>
+                                    <label class="flex items-center gap-2 text-[10px] p-2 rounded-lg border border-white/10"><input type="checkbox" class="product-color-option accent-purple-400" data-color-id="white"> Blanc Pur</label>
+                                    <label class="flex items-center gap-2 text-[10px] p-2 rounded-lg border border-white/10"><input type="checkbox" class="product-color-option accent-purple-400" data-color-id="black"> Noir Mat</label>
+                                    <label class="flex items-center gap-2 text-[10px] p-2 rounded-lg border border-white/10"><input type="checkbox" class="product-color-option accent-purple-400" data-color-id="green"> Vert Émeraude</label>
+                                    <label class="flex items-center gap-2 text-[10px] p-2 rounded-lg border border-white/10"><input type="checkbox" class="product-color-option accent-purple-400" data-color-id="red"> Rouge Rubis</label>
+                                </div>
                             </div>
-                            <div class="sm:col-span-2">
-                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">URL de l'image *</label>
-                                <input type="url" id="new-p-image" required placeholder="https://..." class="w-full glass-input px-3 py-2 rounded-xl text-xs">
+
+                            <div class="p-4 rounded-2xl border border-amber-500/20 bg-amber-950/10">
+                                <label class="flex items-center gap-2 text-xs font-bold text-white mb-3"><input type="checkbox" id="new-p-custom-enabled" class="accent-amber-400"> Autoriser la personnalisation pour ce produit</label>
+                                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    <div><label class="block text-[10px] text-gray-400 mb-1">Prix personnalisation (€)</label><input type="number" min="0" step="0.01" id="new-p-custom-price" value="3.50" class="w-full glass-input px-3 py-2 rounded-xl text-xs"></div>
+                                    <div><label class="block text-[10px] text-gray-400 mb-1">Nom de l'option</label><input id="new-p-custom-label" value="Personnalisation" class="w-full glass-input px-3 py-2 rounded-xl text-xs"></div>
+                                    <div><label class="block text-[10px] text-gray-400 mb-1">Description de l'option</label><input id="new-p-custom-description" value="Couleur, texte ou finition personnalisée" class="w-full glass-input px-3 py-2 rounded-xl text-xs"></div>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Badge spécial (Optionnel)</label>
-                                <input type="text" id="new-p-badge" placeholder="Ex: Top Ventes, Nouveau, Premium" class="w-full glass-input px-3 py-2 rounded-xl text-xs">
-                            </div>
-                            <div class="sm:col-span-2 md:col-span-3">
-                                <label class="block text-[10px] font-bold text-gray-300 uppercase mb-1">Description *</label>
-                                <input type="text" id="new-p-desc" required placeholder="Brève description du modèle 3D..." class="w-full glass-input px-3 py-2 rounded-xl text-xs">
-                            </div>
-                            <div class="sm:col-span-2 md:col-span-3 pt-2">
-                                <button type="submit" class="w-full btn-neon py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
-                                    <i class="fa-solid fa-cloud-arrow-up"></i> Publier dans le Catalogue
-                                </button>
+
+                            <div class="flex gap-2 pt-1">
+                                <button type="submit" id="admin-product-submit-btn" class="flex-1 btn-neon py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2"><i class="fa-solid fa-cloud-arrow-up"></i> Publier dans le Catalogue</button>
+                                <button type="button" id="admin-product-cancel-btn" class="hidden px-5 py-2.5 rounded-xl text-xs font-bold bg-white/5 border border-white/10 hover:bg-white/10">Annuler la modification</button>
                             </div>
                         </form>
                     </div>
@@ -1016,7 +1049,6 @@
         import { 
             getFirestore, 
             collection, 
-            addDoc, 
             updateDoc, 
             deleteDoc,
             doc, 
@@ -1065,6 +1097,44 @@
             { id: 'XL', name: 'Géant', dimension: '20 cm', multiplier: 2.6 }
         ];
 
+        const defaultProductOptions = () => ({
+            sizes: sizes.map(sz => ({ id: sz.id, name: sz.name, dimension: sz.dimension, enabled: true, price: null })),
+            colors: colors.map(col => col.id),
+            customization: { enabled: true, price: 3.50, label: 'Personnalisation', description: 'Couleur, texte ou finition personnalisée' }
+        });
+
+        function normalizeProduct(product) {
+            const defaults = defaultProductOptions();
+            const rawSizes = Array.isArray(product?.options?.sizes) ? product.options.sizes : defaults.sizes;
+            const normalizedSizes = sizes.map(base => {
+                const found = rawSizes.find(x => x && x.id === base.id);
+                return {
+                    id: base.id,
+                    name: found?.name || base.name,
+                    dimension: found?.dimension || base.dimension,
+                    enabled: found?.enabled !== false,
+                    price: found?.price !== undefined && found?.price !== null && found?.price !== '' ? Number(found.price) : null,
+                    multiplier: base.multiplier
+                };
+            });
+            const allowedColors = Array.isArray(product?.options?.colors) ? product.options.colors.filter(id => colors.some(c => c.id === id)) : defaults.colors;
+            const customization = product?.options?.customization || defaults.customization;
+            return {
+                ...product,
+                basePrice: Number(product?.basePrice) || 0,
+                options: {
+                    sizes: normalizedSizes,
+                    colors: allowedColors.length ? allowedColors : [colors[0].id],
+                    customization: {
+                        enabled: customization.enabled !== false,
+                        price: Number(customization.price) || 0,
+                        label: customization.label || 'Personnalisation',
+                        description: customization.description || 'Couleur, texte ou finition personnalisée'
+                    }
+                }
+            };
+        }
+
         const colors = [
             { id: 'gold', name: 'Or Soyeux', hex: '#ffd700' },
             { id: 'cyan', name: 'Néon Cyan', hex: '#00f3ff' },
@@ -1083,9 +1153,7 @@
 
         const CUSTOM_COLOR_FEE = 3.50;
 
-        const initialProducts = [
-            
-        ];
+        const initialProducts = [];
 
         let cart = [];
         let activeCategory = 'all';
@@ -1096,6 +1164,10 @@
         let isCustomColorEnabled = false;
         let appliedCoupon = null;
         let userOrdersList = [];
+        let userOrdersUnsubscribe = null;
+        let adminOrdersUnsubscribe = null;
+        let productsUnsubscribe = null;
+        let couponsUnsubscribe = null;
 
         try {
             app = initializeApp(defaultFirebaseConfig);
@@ -1125,8 +1197,12 @@
                 if (storedOrders) userOrdersList = JSON.parse(storedOrders);
 
                 const storedProds = localStorage.getItem('3dnova_products');
-                if (storedProds) products = JSON.parse(storedProds);
-                else products = [...initialProducts];
+                if (storedProds) {
+                    const parsed = JSON.parse(storedProds);
+                    products = Array.isArray(parsed) ? parsed.map(normalizeProduct) : [];
+                } else {
+                    products = [];
+                }
 
                 const storedCoupons = localStorage.getItem('3dnova_coupons');
                 if (storedCoupons) coupons = JSON.parse(storedCoupons);
@@ -1210,19 +1286,12 @@
             if (!auth || !auth.currentUser) return;
             const productsCol = collection(db, 'artifacts', appId, 'public', 'data', 'products');
             
-            onSnapshot(productsCol, async (snapshot) => {
-                if (snapshot.empty) {
-                    for (const prod of initialProducts) {
-                        try { await setDoc(doc(productsCol, prod.id), prod); } catch(e){}
-                    }
-                    products = [...initialProducts];
-                } else {
-                    const fetched = [];
-                    snapshot.forEach(docSnap => {
-                        fetched.push({ id: docSnap.id, ...docSnap.data() });
-                    });
-                    products = fetched;
-                }
+            onSnapshot(productsCol, (snapshot) => {
+                const fetched = [];
+                snapshot.forEach(docSnap => {
+                    fetched.push(normalizeProduct({ id: docSnap.id, ...docSnap.data() }));
+                });
+                products = fetched;
                 saveLocalStorageProducts();
                 renderProducts();
                 if (isAdminUnlocked) renderAdminProducts();
@@ -1343,7 +1412,7 @@
             const noProd = document.getElementById('no-products');
             grid.innerHTML = '';
 
-            const listToDisplay = products.length ? products : initialProducts;
+            const listToDisplay = products;
 
             const filtered = listToDisplay.filter(p => {
                 let matchesCat = false;
@@ -1361,7 +1430,7 @@
                 if (activeCategory === 'favorites') {
                     noProd.querySelector('p').textContent = "Aucun produit dans vos favoris pour le moment.";
                 } else {
-                    noProd.querySelector('p').textContent = "Aucun produit ne correspond à cette recherche.";
+                    noProd.querySelector('p').textContent = "Aucun produit n’est disponible pour le moment ou aucun produit ne correspond à cette recherche.";
                 }
                 return;
             } else {
@@ -1429,7 +1498,7 @@
         }
 
         function openConfigModal(productId) {
-            const listToSearch = products.length ? products : initialProducts;
+            const listToSearch = products;
             currentSelectedProduct = listToSearch.find(p => p.id === productId);
             if (!currentSelectedProduct) return;
 
@@ -1444,7 +1513,12 @@
             const catObj = initialCategories.find(c => c.id === currentSelectedProduct.category);
             document.getElementById('modal-category-badge').textContent = catObj ? catObj.name : '';
 
+            const custom = currentSelectedProduct.options?.customization || {enabled:true, price:3.5, label:'Personnalisation', description:'Couleur, texte ou finition personnalisée'};
             document.getElementById('customization-toggle').checked = false;
+            document.getElementById('customization-toggle').disabled = !custom.enabled;
+            document.querySelector('label[for="customization-toggle"] span:first-child').textContent = `🎨 ${custom.label}`;
+            document.querySelector('#customization-toggle').closest('.flex').parentElement.querySelector('.text-amber-300').textContent = custom.enabled ? `+${Number(custom.price).toFixed(2)} €` : 'Non disponible';
+            document.querySelector('#custom-text-box').previousElementSibling?.querySelector('p')?.replaceChildren(document.createTextNode(custom.description));
             document.getElementById('custom-text-box').classList.add('hidden');
             document.getElementById('custom-details').value = '';
 
@@ -1473,46 +1547,54 @@
             }, 300);
         }
 
+        function getProductSizes(product) {
+            const configured = product?.options?.sizes;
+            if (Array.isArray(configured) && configured.length) return configured.filter(s => s.enabled !== false);
+            return sizes;
+        }
+
+        function getProductColors(product) {
+            const ids = product?.options?.colors;
+            if (Array.isArray(ids) && ids.length) return colors.filter(c => ids.includes(c.id));
+            return colors;
+        }
+
         function renderSizesUI() {
             const container = document.getElementById('sizes-container');
             container.innerHTML = '';
+            const availableSizes = getProductSizes(currentSelectedProduct);
+            if (!availableSizes.some(s => s.id === selectedSize.id)) selectedSize = availableSizes[0] || sizes[0];
+            document.getElementById('selected-size-label').textContent = `${selectedSize.name} (${selectedSize.dimension})`;
 
-            sizes.forEach(sz => {
+            availableSizes.forEach(sz => {
                 const isSelected = selectedSize.id === sz.id;
                 const btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = `p-2 rounded-xl text-center text-xs font-semibold border transition-all ${isSelected ? 'border-cyan-400 bg-cyan-500/20 text-cyan-300 shadow-[0_0_10px_rgba(0,243,255,0.3)]' : 'border-white/10 bg-white/5 text-gray-300 hover:bg-white/10'}`;
-                btn.innerHTML = `
-                    <div class="font-bold">${sz.name}</div>
-                    <div class="text-[10px] opacity-75">${sz.dimension}</div>
-                `;
-                btn.addEventListener('click', () => {
-                    selectedSize = sz;
-                    document.getElementById('selected-size-label').textContent = `${sz.name} (${sz.dimension})`;
-                    renderSizesUI();
-                    updateCalculatedPrice();
-                });
+                btn.innerHTML = `<div class="font-bold">${sz.name}</div><div class="text-[10px] opacity-75">${sz.dimension}</div><div class="text-[10px] text-cyan-300 mt-1">${getSizePrice(sz).toFixed(2)} €</div>`;
+                btn.addEventListener('click', () => { selectedSize = sz; renderSizesUI(); updateCalculatedPrice(); });
                 container.appendChild(btn);
             });
+        }
+
+        function getSizePrice(size) {
+            if (size && Number.isFinite(Number(size.price))) return Number(size.price);
+            return Number(currentSelectedProduct?.basePrice || 0) * Number(size?.multiplier || 1);
         }
 
         function renderColorsUI() {
             const container = document.getElementById('colors-container');
             container.innerHTML = '';
-
-            colors.forEach(col => {
+            const availableColors = getProductColors(currentSelectedProduct);
+            if (!availableColors.some(c => c.id === selectedColor.id)) selectedColor = availableColors[0] || colors[0];
+            document.getElementById('selected-color-name').textContent = `Couleur sélectionnée: ${selectedColor.name}`;
+            availableColors.forEach(col => {
                 const isSelected = selectedColor.id === col.id;
                 const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.title = col.name;
+                btn.type = 'button'; btn.title = col.name;
                 btn.className = `color-swatch w-7 h-7 rounded-full border-2 border-white/20 transition-all ${isSelected ? 'selected' : ''}`;
                 btn.style.backgroundColor = col.hex;
-
-                btn.addEventListener('click', () => {
-                    selectedColor = col;
-                    document.getElementById('selected-color-name').textContent = `Couleur sélectionnée: ${col.name}`;
-                    renderColorsUI();
-                });
+                btn.addEventListener('click', () => { selectedColor = col; renderColorsUI(); });
                 container.appendChild(btn);
             });
         }
@@ -1520,18 +1602,14 @@
         document.getElementById('customization-toggle').addEventListener('change', (e) => {
             isCustomColorEnabled = e.target.checked;
             const textBox = document.getElementById('custom-text-box');
-            if (isCustomColorEnabled) {
-                textBox.classList.remove('hidden');
-            } else {
-                textBox.classList.add('hidden');
-            }
+            if (isCustomColorEnabled) textBox.classList.remove('hidden'); else textBox.classList.add('hidden');
             updateCalculatedPrice();
         });
 
         function calculateItemUnitPrice() {
             if (!currentSelectedProduct) return 0;
-            let total = currentSelectedProduct.basePrice * selectedSize.multiplier;
-            if (isCustomColorEnabled) total += CUSTOM_COLOR_FEE;
+            let total = getSizePrice(selectedSize);
+            if (isCustomColorEnabled && currentSelectedProduct.options?.customization?.enabled) total += Number(currentSelectedProduct.options.customization.price || 0);
             return total;
         }
 
@@ -1885,6 +1963,10 @@
             if (isFirebaseReady && auth) {
                 try { await signOut(auth); } catch(e){}
             }
+            if (userOrdersUnsubscribe) {
+                userOrdersUnsubscribe();
+                userOrdersUnsubscribe = null;
+            }
             currentUser = null;
             userProfileData = null;
             favorites = [];
@@ -2176,8 +2258,8 @@
 
             if (isFirebaseReady && currentUser) {
                 try {
-                    const ordersCollection = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
-                    await addDoc(ordersCollection, orderData);
+                    const orderRef = doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderData.id);
+                    await setDoc(orderRef, orderData, { merge: true });
                 } catch (error) {}
             }
 
@@ -2185,7 +2267,8 @@
                 cart = [];
                 appliedCoupon = null;
                 document.getElementById('applied-coupon-badge').classList.add('hidden');
-                updateCartUI(true);
+                saveCartToDB();
+                updateCartUI(false);
                 closeCheckout();
                 checkoutForm.reset();
                 showToast("Commande enregistrée avec succès !");
@@ -2251,6 +2334,10 @@
 
         document.getElementById('admin-lock-btn').addEventListener('click', () => {
             isAdminUnlocked = false;
+            if (adminOrdersUnsubscribe) {
+                adminOrdersUnsubscribe();
+                adminOrdersUnsubscribe = null;
+            }
             adminAuthScreen.classList.remove('hidden');
             adminDashboardContent.classList.add('hidden');
             showToast("Panneau Admin verrouillé");
@@ -2266,10 +2353,11 @@
 
         function loadAdminData() {
             // Synchroniser toutes les commandes
-            if (isFirebaseReady) {
+            if (isFirebaseReady && auth && auth.currentUser) {
                 try {
                     const ordersCol = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
-                    onSnapshot(ordersCol, (snapshot) => {
+                    if (adminOrdersUnsubscribe) adminOrdersUnsubscribe();
+                    adminOrdersUnsubscribe = onSnapshot(ordersCol, (snapshot) => {
                         const fetched = [];
                         snapshot.forEach(d => fetched.push({ id: d.id, ...d.data() }));
                         fetched.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -2305,7 +2393,7 @@
             document.getElementById('admin-stat-orders').textContent = adminAllOrders.length;
             document.getElementById('admin-stat-pending-orders').textContent = `${pendingCount} en fabrication / attente`;
             
-            const prodList = products.length ? products : initialProducts;
+            const prodList = products;
             document.getElementById('admin-stat-products').textContent = prodList.length;
 
             const couponCount = Object.keys(coupons).length;
@@ -2387,6 +2475,34 @@
 
         document.getElementById('admin-filter-order-status').addEventListener('change', renderAdminOrders);
 
+        window.updateOrderStatus = async function(orderId, newStatus) {
+            const validStatuses = ORDER_STATUS_STEPS.map(s => s.key);
+            if (!validStatuses.includes(newStatus)) return;
+
+            const localIndex = adminAllOrders.findIndex(o => o.id === orderId);
+            if (localIndex !== -1) adminAllOrders[localIndex].status = newStatus;
+            const userIndex = userOrdersList.findIndex(o => o.id === orderId);
+            if (userIndex !== -1) {
+                userOrdersList[userIndex].status = newStatus;
+                saveLocalStorageOrders();
+            }
+            refreshAdminUI();
+
+            if (isFirebaseReady && db) {
+                try {
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'orders', orderId), {
+                        status: newStatus, updatedAt: new Date().toISOString()
+                    });
+                    showToast('Statut de la commande mis à jour.');
+                } catch (error) {
+                    console.error('Erreur mise à jour commande:', error);
+                    showToast('Statut local mis à jour, mais Firebase a refusé la modification.', true);
+                }
+            } else {
+                showToast('Statut mis à jour en mode local.');
+            }
+        };
+
         window.deleteAdminOrder = async function(orderId) {
             adminAllOrders = adminAllOrders.filter(o => o.id !== orderId);
             userOrdersList = userOrdersList.filter(o => o.id !== orderId);
@@ -2406,7 +2522,7 @@
             const container = document.getElementById('admin-products-list');
             container.innerHTML = '';
 
-            const prodList = products.length ? products : initialProducts;
+            const prodList = products;
 
             prodList.forEach(prod => {
                 const card = document.createElement('div');
@@ -2427,61 +2543,137 @@
                         <h4 class="text-xs font-bold text-white truncate orbitron">${prod.name}</h4>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="text-[11px] text-cyan-300 font-black">${Number(prod.basePrice).toFixed(2)} €</span>
+                            <span class="text-[9px] text-gray-500">${(prod.options?.sizes || []).filter(s => s.enabled !== false).length} tailles</span>
+                            <span class="text-[9px] text-gray-500">${(prod.options?.colors || []).length} couleurs</span>
+                            ${prod.options?.customization?.enabled ? `<span class="text-[9px] text-amber-300">+${Number(prod.options.customization.price || 0).toFixed(2)} € perso.</span>` : '<span class="text-[9px] text-gray-600">Sans perso.</span>'}
                             <span class="text-[9px] text-gray-500">•</span>
                             <span class="text-[9px] text-gray-500">ID ${prod.id}</span>
                         </div>
                     </div>
-                    <button class="shrink-0 text-red-400 hover:text-white text-xs w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/25 border border-red-500/15 transition" onclick="window.deleteAdminProduct('${prod.id}')" title="Supprimer du catalogue">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
+                    <div class="flex items-center gap-1 shrink-0">
+                        <button class="text-cyan-300 hover:text-white text-xs w-8 h-8 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/25 border border-cyan-500/15 transition" onclick="window.editAdminProduct('${prod.id}')" title="Modifier le produit">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button class="text-red-400 hover:text-white text-xs w-8 h-8 rounded-lg bg-red-500/10 hover:bg-red-500/25 border border-red-500/15 transition" onclick="window.deleteAdminProduct('${prod.id}')" title="Supprimer du catalogue">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        document.getElementById('admin-add-product-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        function collectAdminProductForm(existingId = null) {
             const name = document.getElementById('new-p-name').value.trim();
             const category = document.getElementById('new-p-category').value;
-            const basePrice = parseFloat(document.getElementById('new-p-price').value);
+            const basePrice = Number(document.getElementById('new-p-price').value);
             const image = document.getElementById('new-p-image').value.trim();
             const badge = document.getElementById('new-p-badge').value.trim() || null;
             const description = document.getElementById('new-p-desc').value.trim();
+            if (!name || !image || !description || !Number.isFinite(basePrice) || basePrice < 0) throw new Error('Vérifie le nom, l’image, la description et le prix de base.');
 
-            const newProd = {
-                id: 'prod-' + Date.now(),
-                name, category, basePrice, image, badge, description
-            };
+            const productSizes = sizes.map(sz => {
+                const priceRaw = document.getElementById(`size-${sz.id}-price`).value;
+                return { id: sz.id, name: document.getElementById(`size-${sz.id}-name`).value.trim() || sz.name, dimension: document.getElementById(`size-${sz.id}-dimension`).value.trim() || sz.dimension, enabled: document.getElementById(`size-${sz.id}-enabled`).checked, price: priceRaw === '' ? null : Number(priceRaw), multiplier: sz.multiplier };
+            }).filter(sz => sz.enabled || sz.price !== null);
+            if (!productSizes.some(s => s.enabled)) throw new Error('Active au moins une taille.');
 
-            products.push(newProd);
-            saveLocalStorageProducts();
-            renderProducts();
-            refreshAdminUI();
+            const selectedColors = [...document.querySelectorAll('.product-color-option:checked')].map(el => el.dataset.colorId);
+            if (!selectedColors.length) throw new Error('Sélectionne au moins une couleur disponible.');
+            const customEnabled = document.getElementById('new-p-custom-enabled').checked;
+            const customPrice = Number(document.getElementById('new-p-custom-price').value || 0);
+            if (customEnabled && (!Number.isFinite(customPrice) || customPrice < 0)) throw new Error('Prix de personnalisation invalide.');
 
-            if (isFirebaseReady) {
-                try {
-                    const prodRef = doc(db, 'artifacts', appId, 'public', 'data', 'products', newProd.id);
-                    await setDoc(prodRef, newProd);
-                } catch(e){}
+            return normalizeProduct({
+                id: existingId || 'prod-' + Date.now(), name, category, basePrice, image, badge, description,
+                options: {
+                    sizes: productSizes,
+                    colors: selectedColors,
+                    customization: {
+                        enabled: customEnabled,
+                        price: customPrice,
+                        label: document.getElementById('new-p-custom-label').value.trim() || 'Personnalisation',
+                        description: document.getElementById('new-p-custom-description').value.trim() || 'Couleur, texte ou finition personnalisée'
+                    }
+                }
+            });
+        }
+
+        function fillAdminProductForm(product) {
+            const p = normalizeProduct(product);
+            document.getElementById('editing-product-id').value = p.id || '';
+            document.getElementById('new-p-name').value = p.name || '';
+            document.getElementById('new-p-category').value = p.category || 'animaux';
+            document.getElementById('new-p-price').value = Number(p.basePrice || 0).toFixed(2);
+            document.getElementById('new-p-image').value = p.image || '';
+            document.getElementById('new-p-badge').value = p.badge || '';
+            document.getElementById('new-p-desc').value = p.description || '';
+            sizes.forEach(sz => {
+                const conf = p.options.sizes.find(x => x.id === sz.id) || sz;
+                document.getElementById(`size-${sz.id}-enabled`).checked = conf.enabled !== false;
+                document.getElementById(`size-${sz.id}-name`).value = conf.name || sz.name;
+                document.getElementById(`size-${sz.id}-dimension`).value = conf.dimension || sz.dimension;
+                document.getElementById(`size-${sz.id}-price`).value = conf.price == null ? '' : conf.price;
+            });
+            document.querySelectorAll('.product-color-option').forEach(el => el.checked = p.options.colors.includes(el.dataset.colorId));
+            document.getElementById('new-p-custom-enabled').checked = p.options.customization.enabled;
+            document.getElementById('new-p-custom-price').value = p.options.customization.price;
+            document.getElementById('new-p-custom-label').value = p.options.customization.label;
+            document.getElementById('new-p-custom-description').value = p.options.customization.description;
+            document.getElementById('admin-product-submit-btn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Enregistrer les modifications';
+            document.getElementById('admin-product-cancel-btn').classList.remove('hidden');
+            document.getElementById('admin-product-submit-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetAdminProductForm() {
+            const form = document.getElementById('admin-add-product-form');
+            form.reset();
+            document.getElementById('editing-product-id').value = '';
+            document.getElementById('admin-product-submit-btn').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Publier dans le Catalogue';
+            document.getElementById('admin-product-cancel-btn').classList.add('hidden');
+            sizes.forEach(sz => { document.getElementById(`size-${sz.id}-enabled`).checked = true; document.getElementById(`size-${sz.id}-name`).value = sz.name; document.getElementById(`size-${sz.id}-dimension`).value = sz.dimension; document.getElementById(`size-${sz.id}-price`).value = ''; });
+            document.querySelectorAll('.product-color-option').forEach(el => el.checked = true);
+            document.getElementById('new-p-custom-price').value = '3.50';
+            document.getElementById('new-p-custom-label').value = 'Personnalisation';
+            document.getElementById('new-p-custom-description').value = 'Couleur, texte ou finition personnalisée';
+        }
+
+        document.getElementById('admin-add-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const editingId = document.getElementById('editing-product-id').value || null;
+                const product = collectAdminProductForm(editingId);
+                const existingIndex = products.findIndex(p => p.id === product.id);
+                if (existingIndex >= 0) products[existingIndex] = product; else products.push(product);
+                saveLocalStorageProducts(); renderProducts(); refreshAdminUI();
+                if (isFirebaseReady && db) {
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', product.id), product, { merge: true });
+                }
+                showToast(existingIndex >= 0 ? `Produit "${product.name}" modifié.` : `Produit "${product.name}" ajouté au catalogue !`);
+                resetAdminProductForm();
+            } catch (error) {
+                console.error(error); showToast(error.message || 'Impossible d’enregistrer le produit.', true);
             }
-
-            e.target.reset();
-            showToast(`Nouveau produit "${name}" ajouté au catalogue !`);
         });
 
-        window.deleteAdminProduct = async function(productId) {
-            products = products.filter(p => p.id !== productId);
-            saveLocalStorageProducts();
-            renderProducts();
-            refreshAdminUI();
+        document.getElementById('admin-product-cancel-btn').addEventListener('click', resetAdminProductForm);
 
-            if (isFirebaseReady) {
-                try {
-                    const ref = doc(db, 'artifacts', appId, 'public', 'data', 'products', productId);
-                    await deleteDoc(ref);
-                } catch(e){}
+        window.editAdminProduct = function(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) fillAdminProductForm(product);
+        };
+
+        window.deleteAdminProduct = async function(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            if (!confirm(`Supprimer définitivement « ${product.name} » du catalogue ?`)) return;
+            products = products.filter(p => p.id !== productId);
+            saveLocalStorageProducts(); renderProducts(); refreshAdminUI();
+            if (isFirebaseReady && db) {
+                try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', productId)); }
+                catch(e) { console.error(e); showToast('Supprimé localement, mais Firebase a refusé la suppression.', true); return; }
             }
-            showToast("Produit supprimé du catalogue.");
+            showToast('Produit supprimé du catalogue.');
         };
 
         function renderAdminPromos() {
@@ -2723,6 +2915,11 @@
 
         document.getElementById('nav-brand').addEventListener('click', () => {
             window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+
+        window.addEventListener('error', (event) => {
+            console.error('Erreur JavaScript:', event.error || event.message);
+            if (typeof showToast === 'function') showToast('Une erreur technique est survenue. Consultez la console.', true);
         });
 
         window.onload = () => {
