@@ -1036,6 +1036,16 @@
         <span id="toast-msg" class="text-xs sm:text-sm font-semibold">Message Toast</span>
     </div>
 
+    <!-- Lightbox : agrandissement d'image produit -->
+    <div id="image-lightbox" class="fixed inset-0 z-[150] hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4 sm:p-10" role="dialog" aria-modal="true" aria-label="Aperçu de l'image du produit">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" id="lightbox-overlay"></div>
+        <button id="lightbox-close-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 flex items-center justify-center text-white transition-colors z-10" title="Fermer" aria-label="Fermer l'aperçu">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="" class="relative max-w-full max-h-full object-contain rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.7)] scale-95 transition-transform duration-300">
+        <p id="lightbox-caption" class="absolute bottom-5 left-1/2 -translate-x-1/2 text-xs sm:text-sm text-gray-300 bg-black/60 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10"></p>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { 
@@ -1452,9 +1462,13 @@
                 const favHeartClass = isFav ? 'fa-solid fa-heart text-pink-500' : 'fa-regular fa-heart text-white/70 hover:text-pink-400';
 
                 card.innerHTML = `
-                    <div class="relative h-56 overflow-hidden group">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://placehold.co/600x400/101020/00f3ff?text=Objet+3D'">
+                    <div class="product-image-zoom relative h-56 overflow-hidden group bg-[#0a0a14] cursor-zoom-in" data-id="${product.id}" title="Cliquer pour agrandir">
+                        <div class="absolute inset-0 bg-cover bg-center scale-110 blur-2xl opacity-35" style="background-image:url('${product.image}')" aria-hidden="true"></div>
+                        <img src="${product.image}" alt="${product.name}" class="relative w-full h-full object-contain p-4 drop-shadow-[0_12px_25px_rgba(0,0,0,0.6)] transition-transform duration-700 group-hover:scale-105" onerror="this.src='https://placehold.co/600x400/101020/00f3ff?text=Objet+3D'; this.previousElementSibling.style.backgroundImage='url(' + this.src + ')'">
                         <div class="absolute top-0 left-0 right-0 h-20 bg-gradient-to-b from-black/35 to-transparent pointer-events-none"></div>
+                        <span class="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                            <i class="fa-solid fa-magnifying-glass-plus text-xs"></i>
+                        </span>
                         <span class="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-gray-300 text-[11px] px-2.5 py-0.5 rounded-md border border-white/10">
                             <i class="fa-solid ${catObj ? catObj.icon : 'fa-tag'} mr-1 text-cyan-400"></i> ${catObj ? catObj.name : product.category}
                         </span>
@@ -1495,7 +1509,50 @@
                     openConfigModal(id);
                 });
             });
+
+            document.querySelectorAll('.product-image-zoom').forEach(zone => {
+                zone.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    const prod = products.find(p => p.id === id);
+                    if (prod) openImageLightbox(prod.image, prod.name);
+                });
+            });
         }
+
+        function openImageLightbox(src, caption) {
+            const modal = document.getElementById('image-lightbox');
+            const img = document.getElementById('lightbox-img');
+            const captionEl = document.getElementById('lightbox-caption');
+            img.src = src;
+            img.alt = caption || 'Aperçu produit';
+            captionEl.textContent = caption || '';
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                img.classList.remove('scale-95');
+            });
+        }
+
+        function closeImageLightbox() {
+            const modal = document.getElementById('image-lightbox');
+            const img = document.getElementById('lightbox-img');
+            modal.classList.add('opacity-0');
+            img.classList.add('scale-95');
+            document.body.classList.remove('modal-open');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                img.src = '';
+            }, 300);
+        }
+
+        document.getElementById('lightbox-overlay').addEventListener('click', closeImageLightbox);
+        document.getElementById('lightbox-close-btn').addEventListener('click', closeImageLightbox);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !document.getElementById('image-lightbox').classList.contains('hidden')) {
+                closeImageLightbox();
+            }
+        });
 
         function openConfigModal(productId) {
             const listToSearch = products;
