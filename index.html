@@ -516,12 +516,13 @@
                 </button>
             </div>
             
-            <div class="flex-1 overflow-y-auto p-5 space-y-4" id="cart-items-container">
+            <div class="flex-1 overflow-y-auto p-5" id="cart-panel-body">
                 <div id="empty-cart-msg" class="text-center text-gray-500 py-16">
                     <i class="fa-solid fa-box-open text-6xl mb-4 opacity-40"></i>
                     <p class="text-base font-semibold">Votre panier est vide.</p>
                     <p class="text-xs text-gray-400 mt-1">Sélectionnez un article et personnalisez-le !</p>
                 </div>
+                <div id="cart-items-container" class="space-y-4"></div>
             </div>
             
             <div class="p-5 border-t border-white/10 bg-black/60 space-y-3">
@@ -1251,12 +1252,27 @@
         }
 
         if (isFirebaseReady) {
+            loadLocalStorageData();
             initAuthAndData();
         } else {
             loadLocalStorageData();
             updateCartUI(false);
             updateAuthUI();
         }
+
+        // Synchronisation instantanée entre onglets du même navigateur (ex: un onglet admin
+        // et un onglet client ouverts en parallèle) : dès qu'un produit est ajouté/modifié/
+        // supprimé quelque part, les autres onglets s'actualisent sans rechargement manuel.
+        window.addEventListener('storage', (e) => {
+            if (e.key === '3dnova_products' && e.newValue) {
+                try {
+                    const parsed = JSON.parse(e.newValue);
+                    products = Array.isArray(parsed) ? parsed.map(normalizeProduct) : [];
+                    renderProducts();
+                    if (isAdminUnlocked) renderAdminProducts();
+                } catch (err) {}
+            }
+        });
 
         async function initAuthAndData() {
             try {
@@ -1722,7 +1738,6 @@
 
             if (cart.length === 0) {
                 itemsContainer.innerHTML = '';
-                itemsContainer.appendChild(emptyMsg);
                 emptyMsg.style.display = 'block';
                 checkoutBtn.classList.add('hidden');
                 cartSubtotalEl.textContent = '0.00 €';
