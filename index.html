@@ -753,13 +753,10 @@
                 </div>
                 <form id="admin-pass-form" class="space-y-3">
                     <div class="relative">
-                        <input type="password" id="admin-pin-input" placeholder="Code secret admin (ex: admin123)" class="w-full glass-input text-center tracking-widest text-lg font-mono rounded-xl py-3 px-4">
+                        <input type="password" id="admin-pin-input" placeholder="Code secret admin" autocomplete="off" class="w-full glass-input text-center tracking-widest text-lg font-mono rounded-xl py-3 px-4">
                     </div>
                     <button type="submit" class="w-full btn-admin py-3 rounded-xl font-bold text-xs uppercase tracking-wider">
                         <i class="fa-solid fa-lock-open mr-2"></i> Déverrouiller le Panneau
-                    </button>
-                    <button type="button" id="admin-quick-access-btn" class="text-xs text-amber-300 hover:underline opacity-80 pt-1">
-                        ⚡ Accès direct Démo
                     </button>
                 </form>
             </div>
@@ -2406,15 +2403,12 @@
         document.getElementById('admin-pass-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const pin = document.getElementById('admin-pin-input').value.trim();
-            if (pin === ADMIN_PIN_CODE || pin === "admin") {
+            if (pin === ADMIN_PIN_CODE) {
                 unlockAdmin();
             } else {
-                showToast("Code PIN incorrect (Code par défaut: admin123)", true);
+                showToast("Code PIN incorrect.", true);
             }
-        });
-
-        document.getElementById('admin-quick-access-btn').addEventListener('click', () => {
-            unlockAdmin();
+            document.getElementById('admin-pin-input').value = '';
         });
 
         function unlockAdmin() {
